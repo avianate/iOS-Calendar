@@ -13,7 +13,7 @@ class CalendarViewController: UIViewController {
     @IBOutlet weak var calendarView: UICollectionView!
     @IBOutlet weak var monthLabel: UILabel!
     
-    var calendars = [Year]()
+    var calendars = [Calendar]()
     var numberOfYearsToShow = 3
     
     var cellWidth: CGFloat = 40
@@ -38,7 +38,7 @@ class CalendarViewController: UIViewController {
     }
     
     func scrollToToday() {
-        let calendar = Calendar.autoupdatingCurrent
+        let calendar = UIKit.Calendar.autoupdatingCurrent
         let currentMonth = calendar.component(.month, from: Date())
         
         let indexPath = IndexPath(item: 0, section: currentMonth - 1)
@@ -50,7 +50,7 @@ class CalendarViewController: UIViewController {
     
     func setupCalendars() {
         let today = Date()
-        let calendar = Calendar.autoupdatingCurrent
+        let calendar = UIKit.Calendar.autoupdatingCurrent
         let currentYear = calendar.component(.year, from: today)
         
         var dateComponents = DateComponents()
@@ -66,7 +66,7 @@ class CalendarViewController: UIViewController {
                                         : currentYear
             
             if let dateForYear = calendar.date(from: dateComponents) {
-                let year = Year(date: dateForYear)
+                let year = Calendar(date: dateForYear)
                 calendars.append(year)
             }
         }

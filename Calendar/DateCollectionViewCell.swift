@@ -11,6 +11,7 @@ import UIKit
 class DateCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var activeView: UIView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)

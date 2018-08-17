@@ -9,111 +9,142 @@
 import UIKit
 
 class YearViewController: UIViewController {
-
+    
     @IBOutlet weak var calendarView: UICollectionView!
     
-    var columns: CGFloat = 7
-    var spacing: CGFloat = 10.0
-    var inset: CGFloat = 10.0
+    var columns: CGFloat {
+        return UIDevice.current.orientation.isLandscape ? CGFloat(4) : CGFloat(3)
+    }
     
-    var cellWidth: CGFloat = 40
-    var marginWidth: CGFloat = 30
+    var rows: CGFloat {
+        return UIDevice.current.orientation.isLandscape ? CGFloat(3) : CGFloat(4)
+    }
     
-    var calendars = [Year]()
+    var cellSpacing: CGFloat = 10
+    var interItemSpacing: CGFloat = 0
+    var lineSpacing: CGFloat = 5
     
+    let minimumHeight: CGFloat = 144.5
+    
+    var calendars = [Calendar]()
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        calendarView.collectionViewLayout = YearCalendarCollectionLayout()
 
+        calendarView.showsVerticalScrollIndicator = false
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd"
-        let date = dateFormatter.date(from: "2018/01/01")
+        let date1 = dateFormatter.date(from: "2017/01/01")
+        let date2 = dateFormatter.date(from: "2018/01/01")
+        let date3 = dateFormatter.date(from: "2019/01/01")
         
-        calendars.append(Year(date: date!))
+        calendars.append(Calendar(date: date1!))
+        calendars.append(Calendar(date: date2!))
+        calendars.append(Calendar(date: date3!))
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        calendarView.scrollToItem(at: IndexPath(item: 0, section: 1), at: .top, animated: false)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         
-        let frameWidth = view.frame.size.width
-        let width = (frameWidth - (cellWidth * columns) - marginWidth) / columns
-        let layout = calendarView.collectionViewLayout as! UICollectionViewFlowLayout
-        layout.minimumInteritemSpacing = width
-        layout.sectionHeadersPinToVisibleBounds = false
-        
-//        calendarView.isPagingEnabled = true
+        // invalidate the year collection view inside the coordinator animate function
+        // then inside the animation completion handler, we invalidate each month cell's colleciton view
+        coordinator.animate(alongsideTransition: { (context) in
+            
+            self.calendarView.collectionViewLayout.invalidateLayout()
+            
+        }) { (context) in
+            
+            let cells = self.calendarView.visibleCells
+
+            for cell in cells {
+                guard let cell = cell as? MonthCollectionViewCell else { continue }
+                cell.invalidateLayout()
+            }
+        }
     }
 }
 
 extension YearViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = calendarView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as! SectionHeader
+        let view = calendarView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "YearHeader", for: indexPath) as! SectionHeader
         
         let section = Section()
         section.name = titleForSectionAt(indexPath: indexPath)
         
         view.section = section
+        view.isActive = calendars[indexPath.section].isCurrentYear
         
         return view
     }
     
     func titleForSectionAt(indexPath: IndexPath) -> String {
-        let month = calendars[0].months[indexPath.section]
-        
-        return month.name
+        return String(calendars[indexPath.section].year)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 42
+        return calendars[section].months.count
     }
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 12
-    }
+        func numberOfSections(in collectionView: UICollectionView) -> Int {
+            return calendars.count
+        }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = calendarView.dequeueReusableCell(withReuseIdentifier: "CalendarDayCell", for: indexPath) as! DateCollectionViewCell
+        let cell = calendarView.dequeueReusableCell(withReuseIdentifier: "MonthCell", for: indexPath) as! MonthCollectionViewCell
         let item = indexPath.item
-        
-        let currentYear = calendars[0]
         let section = indexPath.section
-        let month = currentYear.months[section]
         
-        cell.dateLabel.text = ""
-        
-        // convert first day of month and number of days in month to be zero-based numbers
-        let firstDayOfMonth = month.firstWeekday - 1
-        let numberOfDays = month.numberOfDays - 1
-        let maxItems = firstDayOfMonth + numberOfDays
-        let offset = firstDayOfMonth - 1
-        
-        // only show the dates starting on the correct weekday
-        let canShowDate = item >= firstDayOfMonth && item <= maxItems
-        
-        if canShowDate {
-            let dayNumber = item - offset
-            cell.dateLabel.text = "\(dayNumber)"
-        }
+        let month = calendars[section].months[item]
+        cell.month = month
+        cell.update()
         
         return cell
     }
 }
 
-//extension YearViewController: UICollectionViewDelegateFlowLayout {
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsetsMake(inset, inset, inset, inset)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return CGFloat(10.0)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return spacing
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let width = Int((calendarView.frame.width / columns) - (inset + spacing))
-//
-//        return CGSize(width: width, height: width)
-//    }
-//}
+extension YearViewController: UICollectionViewDelegateFlowLayout {
+    
+    func getCellWidth() -> CGFloat {
+        
+        let frameWidth = calendarView.frame.size.width
+        let cellWidth = (frameWidth - (cellSpacing * (columns - 1))) / columns
+        
+        return cellWidth
+    }
+    
+    func getCellHeight() -> CGFloat {
+        
+        let frameHeight = calendarView.frame.size.height
+        var cellHeight = (frameHeight - (lineSpacing * (rows - 1))) / rows
+        
+        cellHeight = cellHeight < minimumHeight ? minimumHeight : cellHeight
+        
+        return cellHeight
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return lineSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return interItemSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let itemSize = CGSize(width: getCellWidth(), height: getCellHeight())
+        
+        return itemSize
+    }
+}

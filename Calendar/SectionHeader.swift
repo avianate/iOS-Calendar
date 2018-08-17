@@ -9,11 +9,21 @@
 import UIKit
 
 class SectionHeader: UICollectionReusableView {
-    @IBOutlet private weak var monthNameLabel: UILabel!
+    @IBOutlet private weak var nameLabel: UILabel!
     
     var section: Section! {
         didSet {
-            monthNameLabel.text = section.name
+            nameLabel.text = section.name
+        }
+    }
+    
+    var isActive: Bool = false {
+        didSet {
+            if isActive {
+                nameLabel.textColor = UIColor.red
+            } else {
+                nameLabel.textColor = UIColor.black
+            }
         }
     }
 }
