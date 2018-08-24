@@ -56,17 +56,6 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         let item = indexPath.item
         
         cell.dateLabel.textColor = UIColor.black
-        
-        let isCurrentDate = month.isCurrentDate(dayIndex: indexPath.item)
-        if isCurrentDate, let activeView = cell.activeView {
-            activeView.isHidden = false
-            activeView.layer.cornerRadius = 4
-            activeView.layer.masksToBounds = true
-            cell.dateLabel.textColor = UIColor.white
-        } else {
-            cell.activeView.isHidden = true
-        }
-        
         cell.dateLabel.text = ""
 
         // convert first day of month and number of days in month to be zero-based numbers
@@ -74,6 +63,8 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         let numberOfDays = month.numberOfDays - 1
         let maxItems = firstDayOfMonth + numberOfDays
         let offset = firstDayOfMonth - 1
+        
+        setCurrent(day: item, forCell: cell, withOffset: offset)
 
         // only show the dates starting on the correct weekday
         let canShowDate = item >= firstDayOfMonth && item <= maxItems
@@ -86,10 +77,19 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         return cell
     }
     
-//    func isCurrentDay(_ indexPath: IndexPath) {
-//        let today = Date()
-//        let todayComponents = Calendar.autoupdatingCurrent.dateComponents([.month, .day], from: today)
-//    }
+    func setCurrent(day: Int, forCell cell: DateCollectionViewCell, withOffset offset: Int) {
+        
+        let isCurrentDate = month.isCurrentDate(dayIndex: day - offset)
+        
+        if isCurrentDate, let activeView = cell.activeView {
+            activeView.isHidden = false
+            activeView.layer.cornerRadius = 4
+            activeView.layer.masksToBounds = true
+            cell.dateLabel.textColor = UIColor.white
+        } else {
+            cell.activeView.isHidden = true
+        }
+    }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "MonthHeader", for: indexPath) as! SectionHeader

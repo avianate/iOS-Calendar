@@ -55,6 +55,54 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B838285B213053B300A45F36 /* Layouts */ = {
+			isa = PBXGroup;
+			children = (
+				B8C1924F2125D23100A7838F /* MonthCollectionViewFlowLayout.swift */,
+				B89391752124B77600B34567 /* YearCalendarCollectionLayout.swift */,
+			);
+			path = Layouts;
+			sourceTree = "<group>";
+		};
+		B838285C213053C800A45F36 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B81C8CE521221379006B9C71 /* CalendarViewController.swift */,
+				B8FB1E6F212284BE0019FA37 /* YearViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		B838285D213053D700A45F36 /* Custom Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B84DA99421137CC20020D949 /* DateCollectionViewCell.swift */,
+				B89391772124D4E300B34567 /* MonthCollectionViewCell.swift */,
+			);
+			path = "Custom Cells";
+			sourceTree = "<group>";
+		};
+		B838285E213053EA00A45F36 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				B84DA98B21136FCF0020D949 /* LaunchScreen.storyboard */,
+				B84DA98621136FCE0020D949 /* Main.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		B838285F213053FF00A45F36 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B81C8CE321220D4A006B9C71 /* Month.swift */,
+				B80FDD1D212227FD00E187DD /* Section.swift */,
+				B80FDD1B212227AA00E187DD /* SectionHeader.swift */,
+				B81C8CE12121F7C4006B9C71 /* Year.swift */,
+				B835A89B212632D1009C6981 /* Calendar.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		B84DA97621136FCE0020D949 = {
 			isa = PBXGroup;
 			children = (
@@ -74,22 +122,14 @@
 		B84DA98121136FCE0020D949 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
-				B89391752124B77600B34567 /* YearCalendarCollectionLayout.swift */,
 				B84DA98221136FCE0020D949 /* AppDelegate.swift */,
 				B84DA98921136FCF0020D949 /* Assets.xcassets */,
-				B81C8CE521221379006B9C71 /* CalendarViewController.swift */,
-				B8FB1E6F212284BE0019FA37 /* YearViewController.swift */,
-				B84DA99421137CC20020D949 /* DateCollectionViewCell.swift */,
-				B89391772124D4E300B34567 /* MonthCollectionViewCell.swift */,
+				B838285D213053D700A45F36 /* Custom Cells */,
 				B84DA98E21136FCF0020D949 /* Info.plist */,
-				B84DA98B21136FCF0020D949 /* LaunchScreen.storyboard */,
-				B84DA98621136FCE0020D949 /* Main.storyboard */,
-				B81C8CE321220D4A006B9C71 /* Month.swift */,
-				B80FDD1D212227FD00E187DD /* Section.swift */,
-				B80FDD1B212227AA00E187DD /* SectionHeader.swift */,
-				B81C8CE12121F7C4006B9C71 /* Year.swift */,
-				B835A89B212632D1009C6981 /* Calendar.swift */,
-				B8C1924F2125D23100A7838F /* MonthCollectionViewFlowLayout.swift */,
+				B838285B213053B300A45F36 /* Layouts */,
+				B838285F213053FF00A45F36 /* Models */,
+				B838285E213053EA00A45F36 /* Storyboards */,
+				B838285C213053C800A45F36 /* View Controllers */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -126,6 +166,7 @@
 				TargetAttributes = {
 					B84DA97E21136FCE0020D949 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -329,7 +370,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.graham.nate.Calendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -347,7 +388,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.graham.nate.Calendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

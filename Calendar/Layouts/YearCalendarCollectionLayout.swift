@@ -52,7 +52,7 @@ class YearCalendarCollectionLayout: UICollectionViewLayout {
             let column = monthIndex / numberOfRows
             
             let headerIndexPath = IndexPath(item: row, section: monthIndex)
-            let headerCellAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, with: headerIndexPath)
+            let headerCellAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, with: headerIndexPath)
             headerAttributes.append(headerCellAttributes)
             headerCellAttributes.frame = CGRect(x: 0.0, y: CGFloat(column), width: itemSize.width, height: 8.0)
             

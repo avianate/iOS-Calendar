@@ -50,7 +50,7 @@ class MonthCollectionViewFlowLayout: UICollectionViewLayout, UICollectionViewDel
         
         let cellWidth = getCellWidth(collectionView)
         let totalCellWidth = cellWidth * columns
-        let totalSpacing = (cellWidth * (columns - 1)) / 2
+//        let totalSpacing = (cellWidth * (columns - 1)) / 2
         let frameWidth = collectionView.frame.size.width
         
         let inset = (frameWidth - totalCellWidth) / 2

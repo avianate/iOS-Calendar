@@ -8,85 +8,102 @@
 
 import UIKit
 
-class CalendarViewController: UIViewController {
+class MonthViewController: UIViewController {
     
     @IBOutlet weak var calendarView: UICollectionView!
     @IBOutlet weak var monthLabel: UILabel!
     
     var calendars = [Calendar]()
     var numberOfYearsToShow = 3
+    var selectedYear: Int?
+    var selectedMonth: Int?
     
     var cellWidth: CGFloat = 40
     var marginWidth: CGFloat = 30
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // Layout cells
         let frameWidth = view.frame.size.width
         let width = (frameWidth - (cellWidth * 7) - marginWidth) / 7
         let layout = calendarView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.minimumInteritemSpacing = width
         layout.sectionHeadersPinToVisibleBounds = false
-        
-        calendarView.isPagingEnabled = true
-        
-        setupCalendars()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        scrollToToday()
-    }
-    
-    func scrollToToday() {
-        let calendar = UIKit.Calendar.autoupdatingCurrent
-        let currentMonth = calendar.component(.month, from: Date())
-        
-        let indexPath = IndexPath(item: 0, section: currentMonth - 1)
-        
-        calendarView.scrollToItem(at: indexPath, at: .top, animated: false)
-        
-        updateMonthLabel(indexPath: indexPath)
-    }
-    
-    func setupCalendars() {
-        let today = Date()
-        let calendar = UIKit.Calendar.autoupdatingCurrent
-        let currentYear = calendar.component(.year, from: today)
-        
-        var dateComponents = DateComponents()
-        dateComponents.year = currentYear
-        dateComponents.month = 1
-        dateComponents.day = 1
-        
-        for i in 1 ... numberOfYearsToShow {
-            dateComponents.year = i < 2
-                                    ? currentYear - 1
-                                    : i > 2
-                                        ? currentYear + 1
-                                        : currentYear
-            
-            if let dateForYear = calendar.date(from: dateComponents) {
-                let year = Calendar(date: dateForYear)
-                calendars.append(year)
-            }
+
+        // Scroll to selected month
+        if selectedYear != nil && selectedMonth != nil {
+            let section = selectedYear!
+            let item = selectedMonth!
+            let previousMonths = CGFloat((section * 12) + item)
+            let pageSize = calendarView.bounds.size
+            let offset = CGPoint(x: 0, y: pageSize.height * previousMonths)
+            //        let contentOffset = CGPoint(x: pageSize.width * self.items.count, y: 0)
+            calendarView.setContentOffset(offset, animated: false)
         }
+        
+//        setupCalendars()
     }
     
-    func updateMonthLabel(indexPath: IndexPath) {
-        let month = calendars[1].months[indexPath.section]
-        
-        monthLabel.text = month.name
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+////        scrollToToday()
+//    }
+//
+//    func scrollToToday() {
+//        let calendar = UIKit.Calendar.autoupdatingCurrent
+//        let currentMonth = calendar.component(.month, from: Date())
+//
+//        let indexPath = IndexPath(item: 0, section: currentMonth - 1)
+//
+//        calendarView.scrollToItem(at: indexPath, at: .top, animated: false)
+//
+//        updateMonthLabel(indexPath: indexPath)
+//    }
+//
+//    func setupCalendars() {
+//        let today = Date()
+//        let calendar = UIKit.Calendar.autoupdatingCurrent
+//        let currentYear = calendar.component(.year, from: today)
+//
+//        var dateComponents = DateComponents()
+//        dateComponents.year = currentYear
+//        dateComponents.month = 1
+//        dateComponents.day = 1
+//
+//        for i in 1 ... numberOfYearsToShow {
+//            dateComponents.year = i < 2
+//                                    ? currentYear - 1
+//                                    : i > 2
+//                                        ? currentYear + 1
+//                                        : currentYear
+//
+//            if let dateForYear = calendar.date(from: dateComponents) {
+//                let year = Calendar(date: dateForYear)
+//                calendars.append(year)
+//            }
+//        }
+//    }
+//
+//    func updateMonthLabel(indexPath: IndexPath) {
+//        let month = calendars[1].months[indexPath.section]
+//
+//        monthLabel.text = month.name
+//    }
     
     func updateMonthLabel() {
-        let indexPath = calendarView.indexPathsForVisibleItems.first
-        let month = calendars[1].months[indexPath?.section ?? 0]
+//        let indexPath = calendarView.indexPathsForVisibleItems.first
         
-        monthLabel.text = month.name
+        if let selectedYear = selectedYear, let selectedMonth = selectedMonth {
+            let month = calendars[selectedYear].months[selectedMonth]
+            monthLabel.text = month.name
+            return
+        }
+        
+        monthLabel.text = ""
     }
 }
 
-extension CalendarViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension MonthViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = calendarView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as! SectionHeader

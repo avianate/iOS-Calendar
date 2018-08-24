@@ -64,6 +64,7 @@ class YearViewController: UIViewController {
             for cell in cells {
                 guard let cell = cell as? MonthCollectionViewCell else { continue }
                 cell.invalidateLayout()
+                cell.collectionView.reloadData()
             }
         }
     }
@@ -105,6 +106,25 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
         cell.update()
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("selected cell: \(calendars[indexPath.section].months[indexPath.item].name)");
+        // TODO: Transition to MonthViewController
+        performSegue(withIdentifier: "SelectMonthSegue", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let indexPath = calendarView.indexPathsForSelectedItems?.first
+        
+        if segue.identifier == "SelectMonthSegue" {
+            let destinationVC = segue.destination as! MonthViewController
+            if let indexPath = indexPath {
+                destinationVC.calendars = calendars
+                destinationVC.selectedYear = indexPath.section
+                destinationVC.selectedMonth = indexPath.item
+            }
+        }
     }
 }
 
