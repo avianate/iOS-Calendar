@@ -27,6 +27,7 @@ class YearViewController: UIViewController {
     let minimumHeight: CGFloat = 144.5
     
     var calendars = [Calendar]()
+    var finishedInitialLayout = false
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +45,24 @@ class YearViewController: UIViewController {
         calendars.append(Calendar(date: date3!))
     }
     
+    override func viewDidLayoutSubviews() {
+        
+        if !finishedInitialLayout {
+            let section: CGFloat = 1
+            let headerHeight: CGFloat = 35
+            let headerHeightOffset: CGFloat = headerHeight * (section + 1)
+            let pageSize = calendarView.bounds.size.height
+            let offset = CGPoint(x: 0, y: (pageSize * section) + headerHeightOffset)
+            calendarView.setContentOffset(offset, animated: false)
+            
+            if calendarView.contentOffset.y > 0 {
+                finishedInitialLayout = true;
+            }
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
-        calendarView.scrollToItem(at: IndexPath(item: 0, section: 1), at: .top, animated: false)
+//        calendarView.scrollToItem(at: IndexPath(item: 0, section: 1), at: .top, animated: false)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
