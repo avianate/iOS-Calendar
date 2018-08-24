@@ -14,12 +14,14 @@ class MonthViewController: UIViewController {
     @IBOutlet weak var monthLabel: UILabel!
     
     var calendars = [Calendar]()
+    var months = [Month]()
     var numberOfYearsToShow = 3
     var selectedYear: Int?
     var selectedMonth: Int?
     
     var cellWidth: CGFloat = 40
     var marginWidth: CGFloat = 30
+    var finishedInitialLayout = false;
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,24 +32,34 @@ class MonthViewController: UIViewController {
         let layout = calendarView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.minimumInteritemSpacing = width
         layout.sectionHeadersPinToVisibleBounds = false
-
-        // Scroll to selected month
-        if selectedYear != nil && selectedMonth != nil {
-            let section = selectedYear!
-            let item = selectedMonth!
-            let previousMonths = CGFloat((section * 12) + item)
-            let pageSize = calendarView.bounds.size
-            let offset = CGPoint(x: 0, y: pageSize.height * previousMonths)
-            //        let contentOffset = CGPoint(x: pageSize.width * self.items.count, y: 0)
-            calendarView.setContentOffset(offset, animated: false)
-        }
         
-//        setupCalendars()
+        if calendars.count > 0 {
+            for calendar in calendars.enumerated() {
+                months.append(contentsOf: calendar.element.months)
+            }
+            
+            print("Months count: \(months.count)")
+        }
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-////        scrollToToday()
-//    }
+    override func viewDidLayoutSubviews() {
+        
+        if !finishedInitialLayout {
+            if selectedYear != nil && selectedMonth != nil {
+                let section = selectedYear!
+                let item = selectedMonth!
+                let previousMonths = CGFloat((section * 12) + item)
+                let pageSize = calendarView.bounds.size.height - 10
+                let offset = CGPoint(x: 0, y: (pageSize * previousMonths) + 40)
+                calendarView.setContentOffset(offset, animated: false)
+                
+                if calendarView.contentOffset.y > 0 {
+                    finishedInitialLayout = true;
+                }
+            }
+        }
+    }
+    
 //
 //    func scrollToToday() {
 //        let calendar = UIKit.Calendar.autoupdatingCurrent
@@ -84,22 +96,25 @@ class MonthViewController: UIViewController {
 //        }
 //    }
 //
-//    func updateMonthLabel(indexPath: IndexPath) {
-//        let month = calendars[1].months[indexPath.section]
-//
-//        monthLabel.text = month.name
-//    }
+    func updateMonthLabel(indexPath: IndexPath) {
+        let month = months[indexPath.section]
+
+        monthLabel.text = month.name
+    }
     
     func updateMonthLabel() {
 //        let indexPath = calendarView.indexPathsForVisibleItems.first
         
-        if let selectedYear = selectedYear, let selectedMonth = selectedMonth {
+        if !finishedInitialLayout, let selectedYear = selectedYear, let selectedMonth = selectedMonth {
             let month = calendars[selectedYear].months[selectedMonth]
             monthLabel.text = month.name
+            
             return
         }
         
-        monthLabel.text = ""
+        guard let indexPath = calendarView.indexPathsForVisibleItems.first else { return }
+        let month = months[indexPath.section]
+        monthLabel.text = month.name
     }
 }
 
@@ -112,12 +127,11 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
         section.name = titleForSectionAt(indexPath: indexPath)
         
         view.section = section
-        
         return view
     }
     
     func titleForSectionAt(indexPath: IndexPath) -> String {
-        let month = calendars[1].months[indexPath.section]
+        let month = months[indexPath.section]
         
         return month.name
     }
@@ -127,7 +141,7 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 12
+        return months.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -138,9 +152,9 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
         let cell = calendarView.dequeueReusableCell(withReuseIdentifier: "CalendarDayCell", for: indexPath) as! DateCollectionViewCell
         let item = indexPath.item
         
-        let currentYear = calendars[1]
+//        let currentYear = calendars[]
         let section = indexPath.section
-        let month = currentYear.months[section]
+        let month = months[section]
         
         cell.dateLabel.text = ""
         

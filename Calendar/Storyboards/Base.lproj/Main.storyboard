@@ -30,20 +30,20 @@
                                 </subviews>
                             </stackView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="MTV-z3-B8a">
-                                <rect key="frame" x="15" y="132" width="345" height="291"/>
+                                <rect key="frame" x="15" y="132" width="345" height="290"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="291" id="rhm-Uq-1yh"/>
+                                    <constraint firstAttribute="height" constant="290" id="rhm-Uq-1yh"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="LGa-RV-7bl">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="LGa-RV-7bl">
                                     <size key="itemSize" width="40" height="40"/>
-                                    <size key="headerReferenceSize" width="50" height="42"/>
+                                    <size key="headerReferenceSize" width="50" height="40"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="CalendarDayCell" id="zu4-Ti-92i" customClass="DateCollectionViewCell" customModule="Calendar" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="42" width="40" height="40"/>
+                                        <rect key="frame" x="0.0" y="40" width="40" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
@@ -70,16 +70,16 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SectionHeader" id="1xa-91-1lC" customClass="SectionHeader" customModule="Calendar" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="345" height="42"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="345" height="40"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z1e-BO-uUA">
-                                            <rect key="frame" x="151" y="4" width="43" height="21"/>
+                                            <rect key="frame" x="151" y="0.0" width="43" height="29"/>
                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="02J-Ui-r1X">
-                                            <rect key="frame" x="8" y="29" width="329" height="1"/>
+                                            <rect key="frame" x="8" y="33" width="329" height="1"/>
                                             <color key="backgroundColor" white="0.84999999999999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="rGD-yp-pQ1"/>
@@ -90,8 +90,8 @@
                                         <constraint firstItem="02J-Ui-r1X" firstAttribute="leading" secondItem="1xa-91-1lC" secondAttribute="leadingMargin" id="HLa-H9-Odi"/>
                                         <constraint firstItem="Z1e-BO-uUA" firstAttribute="centerX" secondItem="1xa-91-1lC" secondAttribute="centerX" id="JFW-vS-kna"/>
                                         <constraint firstItem="02J-Ui-r1X" firstAttribute="trailing" secondItem="1xa-91-1lC" secondAttribute="trailingMargin" id="O1d-wh-gzq"/>
-                                        <constraint firstItem="Z1e-BO-uUA" firstAttribute="top" secondItem="1xa-91-1lC" secondAttribute="top" constant="4" id="VFk-7n-kRQ"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="02J-Ui-r1X" secondAttribute="bottom" constant="4" id="X2N-sR-Muz"/>
+                                        <constraint firstItem="Z1e-BO-uUA" firstAttribute="top" secondItem="1xa-91-1lC" secondAttribute="top" id="VFk-7n-kRQ"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="02J-Ui-r1X" secondAttribute="bottom" id="X2N-sR-Muz"/>
                                         <constraint firstItem="02J-Ui-r1X" firstAttribute="top" secondItem="Z1e-BO-uUA" secondAttribute="bottom" constant="4" id="q8b-CN-F1k"/>
                                     </constraints>
                                     <connections>
