@@ -28,6 +28,7 @@ class YearViewController: UIViewController {
     
     var calendars = [Calendar]()
     var finishedInitialLayout = false
+    var yearToDisplay = 1
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,24 +46,30 @@ class YearViewController: UIViewController {
         calendars.append(Calendar(date: date3!))
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        scrollToYear()
+        
+        let visibleYear = getVisibleYear()
+        navigationItem.title = visibleYear != "" ? visibleYear : String(calendars[1].year)
+    }
+    
     override func viewDidLayoutSubviews() {
         
         if !finishedInitialLayout {
-            let section: CGFloat = 1
-            let headerHeight: CGFloat = 35
-            let headerHeightOffset: CGFloat = headerHeight * (section + 1)
-            let pageSize = calendarView.bounds.size.height
-            let offset = CGPoint(x: 0, y: (pageSize * section) + headerHeightOffset)
-            calendarView.setContentOffset(offset, animated: false)
+            scrollToYear()
             
             if calendarView.contentOffset.y > 0 {
+                let visibleYear = getVisibleYear()
+                navigationItem.title = visibleYear != "" ? visibleYear : String(calendars[1].year)
                 finishedInitialLayout = true;
             }
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-//        calendarView.scrollToItem(at: IndexPath(item: 0, section: 1), at: .top, animated: false)
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -84,6 +91,25 @@ class YearViewController: UIViewController {
                 cell.collectionView.reloadData()
             }
         }
+    }
+    
+    private func getVisibleYear() -> String {
+        let indexPath = calendarView.indexPathsForVisibleItems.first
+        if let section = indexPath?.section {
+            let year = calendars[section].year
+            return String(year)
+        }
+        
+        return ""
+    }
+    
+    private func scrollToYear() {
+        let section: CGFloat = CGFloat(yearToDisplay)
+        let headerHeight: CGFloat = 35
+        let headerHeightOffset: CGFloat = headerHeight * (section + 1)
+        let pageSize = calendarView.bounds.size.height
+        let offset = CGPoint(x: 0, y: (pageSize * section) + headerHeightOffset)
+        calendarView.setContentOffset(offset, animated: false)
     }
 }
 
@@ -133,6 +159,7 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let indexPath = calendarView.indexPathsForSelectedItems?.first
+        self.yearToDisplay = indexPath?.section ?? 1
         
         if segue.identifier == "SelectMonthSegue" {
             let destinationVC = segue.destination as! MonthViewController
@@ -140,7 +167,18 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
                 destinationVC.calendars = calendars
                 destinationVC.selectedYear = indexPath.section
                 destinationVC.selectedMonth = indexPath.item
+                destinationVC.delegate = self
+                
             }
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentTitle = navigationItem.title
+        let newTitle = getVisibleYear()
+        
+        if currentTitle != newTitle {
+            navigationItem.title = newTitle
         }
     }
 }
@@ -183,5 +221,18 @@ extension YearViewController: UICollectionViewDelegateFlowLayout {
         let itemSize = CGSize(width: getCellWidth(), height: getCellHeight())
         
         return itemSize
+    }
+}
+
+extension YearViewController: MonthViewDelegate {
+    
+    func backButtonDidChange(title: String) {
+        let newBackButton = UIBarButtonItem()
+        newBackButton.title = title
+        self.navigationItem.backBarButtonItem = newBackButton
+    }
+    
+    func yearToDisplay(_ year: Int) {
+        yearToDisplay = year
     }
 }
