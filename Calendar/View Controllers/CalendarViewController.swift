@@ -147,6 +147,9 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
         
         let section = Section()
         section.name = titleForSectionAt(indexPath: indexPath)
+        let isCurrentMonth = months[indexPath.section].isCurrentMonth
+        
+        view.isActive = isCurrentMonth
         
         view.section = section
         return view
@@ -178,12 +181,14 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
         let month = months[section]
         
         cell.dateLabel.text = ""
+        cell.dateLabel.textColor = getDateColor(indexPath)
         
         // convert first day of month and number of days in month to be zero-based numbers
         let firstDayOfMonth = month.firstWeekday - 1
         let numberOfDays = month.numberOfDays - 1
         let maxItems = firstDayOfMonth + numberOfDays
         let offset = firstDayOfMonth - 1
+        setCurrent(month: month, day: indexPath.item, forCell: cell, withOffset: offset)
         
         // only show the dates starting on the correct weekday
         let canShowDate = item >= firstDayOfMonth && item <= maxItems
@@ -196,5 +201,27 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
         return cell
     }
     
+    func getDateColor(_ indexPath: IndexPath) -> UIColor {
+        
+        if indexPath.item % 7 == 0 {
+            return UIColor.red
+        }
+        
+        return UIColor.black
+    }
+    
+    func setCurrent(month: Month, day: Int, forCell cell: DateCollectionViewCell, withOffset offset: Int) {
+        
+        let isCurrentDate = month.isCurrentDate(dayIndex: day - offset)
+        
+        if isCurrentDate, let activeView = cell.activeView {
+            activeView.isHidden = false
+            activeView.layer.cornerRadius = 4
+            activeView.layer.masksToBounds = true
+            cell.dateLabel.textColor = UIColor.white
+        } else {
+            cell.activeView.isHidden = true
+        }
+    }
     
 }

@@ -55,8 +55,8 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DayCell", for: indexPath) as! DateCollectionViewCell
         let item = indexPath.item
         
-        cell.dateLabel.textColor = UIColor.black
         cell.dateLabel.text = ""
+        cell.dateLabel.textColor = getDateColor(indexPath)
 
         // convert first day of month and number of days in month to be zero-based numbers
         let firstDayOfMonth = month.firstWeekday - 1
@@ -75,6 +75,14 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         }
         
         return cell
+    }
+    
+    func getDateColor(_ indexPath: IndexPath) -> UIColor {
+        if indexPath.item % 7 == 0 {
+            return UIColor.red
+        }
+        
+        return UIColor.black
     }
     
     func setCurrent(day: Int, forCell cell: DateCollectionViewCell, withOffset offset: Int) {
@@ -102,19 +110,6 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         
         return view
     }
-    
-//    func setupGrid() {
-//        
-//        let frameWidth = collectionView.frame.size.width
-//        let frameHeight = collectionView.frame.size.width
-//        let cellWidth = (frameWidth - (interItemSpacing * (columns - 1))) / columns
-//        let cellHeight = (frameHeight - (lineSpacing * (rows - 1))) / rows
-//        
-//        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-//        layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
-//        layout.minimumInteritemSpacing = interItemSpacing
-//        layout.minimumLineSpacing = lineSpacing
-//    }
 }
 
 extension MonthCollectionViewCell: UICollectionViewDelegateFlowLayout {
@@ -142,19 +137,6 @@ extension MonthCollectionViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        let minimumHeight: CGFloat = 144.5
-//
-//        let cellWidth = getCellWidth()
-//        let totalCellWidth = cellWidth * columns
-//        let totalSpacing = (cellWidth * (columns - 1)) / 2
-//        let frameWidth = collectionView.frame.size.width
-//
-//        let inset = (frameWidth - totalCellWidth) / 2
-//
-//        return UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
-//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
