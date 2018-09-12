@@ -16,8 +16,8 @@ class YearCalendarCollectionLayout: UICollectionViewLayout {
     private var numberOfSections = 12
     private var numberOfItems = 42
     
-//    var itemWidth = collectionView.frame.width / numberOfSectionsInRow
-//    var itemHeight = collectionView.frame.height / numberOfRows
+    //    var itemWidth = collectionView.frame.width / numberOfSectionsInRow
+    //    var itemHeight = collectionView.frame.height / numberOfRows
     var sectionSize = CGSize(width: 125, height: 166)
     var itemSize = CGSize(width: 17, height: 23)
     var itemSpacing: CGFloat = 0
@@ -38,8 +38,8 @@ class YearCalendarCollectionLayout: UICollectionViewLayout {
         
         guard let collectionView = collectionView else { return }
         
-//        let availableHeight = Int(collectionView.bounds.height + itemSpacing)
-//        let itemHeightForCalculation = Int(itemSize.height + itemSpacing)
+        //        let availableHeight = Int(collectionView.bounds.height + itemSpacing)
+        //        let itemHeightForCalculation = Int(itemSize.height + itemSpacing)
         
         numberOfItems = collectionView.numberOfItems(inSection: 1)
         numberOfSections = collectionView.numberOfSections
@@ -77,12 +77,12 @@ class YearCalendarCollectionLayout: UICollectionViewLayout {
     
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-//        guard let collectionView = collectionView else { return true }
-//
-//        let availableHeight = newBounds.height - collectionView.contentInset.top - collectionView.contentInset.bottom
-//        let possibleRows = Int(availableHeight + itemSpacing) / Int(sectionSize.height + itemSpacing)
-//
-//        return possibleRows != numberOfRows
+        //        guard let collectionView = collectionView else { return true }
+        //
+        //        let availableHeight = newBounds.height - collectionView.contentInset.top - collectionView.contentInset.bottom
+        //        let possibleRows = Int(availableHeight + itemSpacing) / Int(sectionSize.height + itemSpacing)
+        //
+        //        return possibleRows != numberOfRows
         
         return false
     }

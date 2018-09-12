@@ -29,10 +29,10 @@ class YearViewController: UIViewController {
     var calendars = [Calendar]()
     var finishedInitialLayout = false
     var yearToDisplay = 1
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         calendarView.showsVerticalScrollIndicator = false
         
         let dateFormatter = DateFormatter()
@@ -84,7 +84,7 @@ class YearViewController: UIViewController {
         }) { (context) in
             
             let cells = self.calendarView.visibleCells
-
+            
             for cell in cells {
                 guard let cell = cell as? MonthCollectionViewCell else { continue }
                 cell.invalidateLayout()
@@ -135,9 +135,9 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
         return calendars[section].months.count
     }
     
-        func numberOfSections(in collectionView: UICollectionView) -> Int {
-            return calendars.count
-        }
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return calendars.count
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = calendarView.dequeueReusableCell(withReuseIdentifier: "MonthCell", for: indexPath) as! MonthCollectionViewCell
@@ -152,7 +152,6 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selected cell: \(calendars[indexPath.section].months[indexPath.item].name)");
         // TODO: Transition to MonthViewController
         performSegue(withIdentifier: "SelectMonthSegue", sender: self)
     }
@@ -212,7 +211,7 @@ extension YearViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-
+        
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     

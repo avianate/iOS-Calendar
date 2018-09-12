@@ -57,7 +57,7 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         
         cell.dateLabel.text = ""
         cell.dateLabel.textColor = getDateColor(indexPath)
-
+        
         // convert first day of month and number of days in month to be zero-based numbers
         let firstDayOfMonth = month.firstWeekday - 1
         let numberOfDays = month.numberOfDays - 1
@@ -65,10 +65,10 @@ extension MonthCollectionViewCell: UICollectionViewDataSource, UICollectionViewD
         let offset = firstDayOfMonth - 1
         
         setCurrent(day: item, forCell: cell, withOffset: offset)
-
+        
         // only show the dates starting on the correct weekday
         let canShowDate = item >= firstDayOfMonth && item <= maxItems
-
+        
         if canShowDate {
             let dayNumber = item - offset
             cell.dateLabel.text = "\(dayNumber)"

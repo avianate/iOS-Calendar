@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.12.1" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Hymn" representedClassName="Hymn" syncable="YES" codeGenerationType="class">
+        <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="datesUsed" optional="YES" attributeType="Transformable" customClassName="[Date]" syncable="YES"/>
+        <attribute name="meter" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="number" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="title" attributeType="String" syncable="YES"/>
+        <attribute name="topic" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Meeting" representedClassName="Meeting" syncable="YES" codeGenerationType="class">
+        <attribute name="closingHymn" optional="YES" attributeType="Transformable" customClassName="Hymn" syncable="YES"/>
+        <attribute name="openingHymn" optional="YES" attributeType="Transformable" customClassName="Hymn" syncable="YES"/>
+        <attribute name="restHymn" optional="YES" attributeType="Transformable" customClassName="Hymn" syncable="YES"/>
+        <attribute name="sacramentHymn" optional="YES" attributeType="Transformable" customClassName="Hymn" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Hymn" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Meeting" positionX="-54" positionY="36" width="128" height="105"/>
+    </elements>
+</model>

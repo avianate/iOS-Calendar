@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class Month {
     var firstWeekday: Int = 0
@@ -31,7 +32,7 @@ class Month {
         
         todayComponents = currentCalendar.dateComponents([.year, .month, .day], from: today)
         self.isCurrentYear = year == todayComponents.year
-
+        
         let monthComponents = currentCalendar.dateComponents([.year, .month], from: date)
         isCurrentMonth = todayComponents.month == monthComponents.month && isCurrentYear
     }
@@ -47,6 +48,11 @@ class Month {
         let monthName = currentCalendar.shortMonthSymbols[month - 1]
         
         return monthName
+    }
+    
+    func getMonth(forDate date: Date) -> Int {
+        let month = currentCalendar.component(.month, from: date)
+        return month
     }
     
     func getFirstDayOfMonth(forDate date: Date) -> Int {
@@ -77,5 +83,38 @@ class Month {
         let numberOfDays = currentCalendar.range(of: .day, in: .month, for: date)
         
         return numberOfDays?.count ?? 30
+    }
+    
+    func getData(forDate date: Date) -> Gig? {
+        
+        // return model data for specified date
+        
+        // 1 get the managed context from the app delegate
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // 2 create fetch request for all "Gig" entities
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Gig")
+        //        let foo = NSPredicate(format: "stationId CONTAINS[c] %@ OR stationId CONTAINS[c] %@", date as CVarArg, date)
+        let nsDate = date as NSDate
+        let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", nsDate, nsDate)
+        
+        fetchRequest.predicate = predicate
+        
+        // 3 execute fetch request
+        do {
+            let data = try managedContext.fetch(fetchRequest)
+            return data.first as? Gig
+            
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        
+        return nil
+    }
+    
+    func getDateFrom(components: DateComponents) -> Date? {
+        return currentCalendar.date(from: components)
     }
 }

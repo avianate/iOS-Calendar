@@ -9,28 +9,6 @@
 import Foundation
 import UIKit
 
-//struct Year {
-//    let year: Int
-//    var months = [Month]()
-//    var isCurrentYear = false
-//
-//    init(date: Date) {
-//        let calendar = Calendar.autoupdatingCurrent
-//
-//        self.year = calendar.component(.year, from: date)
-//
-//        let currentYear = calendar.component(.year, from: Date())
-//        isCurrentYear = currentYear == self.year
-//
-//        for i in 0 ..< 12 {
-//            if let newDate = calendar.date(byAdding: .month, value: i, to: date) {
-//                let month = Month(date: newDate)
-//                months.append(month)
-//            }
-//        }
-//    }
-//}
-
 struct CalendarData {
     
     var today = Date()
@@ -59,5 +37,4 @@ struct CalendarData {
     func getComponentsForDate(date: Date) -> DateComponents {
         return calendar.dateComponents([.year, .month, .day], from: date)
     }
-    
 }
