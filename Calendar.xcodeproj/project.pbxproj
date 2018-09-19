@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B8071D7D2152DC9A00E096FC /* PopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8071D7C2152DC9A00E096FC /* PopAnimator.swift */; };
 		B80FDD1C212227AA00E187DD /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80FDD1B212227AA00E187DD /* SectionHeader.swift */; };
 		B80FDD1E212227FD00E187DD /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80FDD1D212227FD00E187DD /* Section.swift */; };
 		B814062C213F7EC8003F08E8 /* NSPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B814062B213F7EC8003F08E8 /* NSPersistentContainer.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B8071D7C2152DC9A00E096FC /* PopAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopAnimator.swift; sourceTree = "<group>"; };
 		B80FDD1B212227AA00E187DD /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
 		B80FDD1D212227FD00E187DD /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		B814062B213F7EC8003F08E8 /* NSPersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSPersistentContainer.swift; sourceTree = "<group>"; };
@@ -72,6 +74,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B8071D7B2152DC8000E096FC /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				B8071D7C2152DC9A00E096FC /* PopAnimator.swift */,
+			);
+			path = Transitions;
+			sourceTree = "<group>";
+		};
 		B814062A213F7EBB003F08E8 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,6 +162,7 @@
 		B84DA98121136FCE0020D949 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
+				B8071D7B2152DC8000E096FC /* Transitions */,
 				B84DA98221136FCE0020D949 /* AppDelegate.swift */,
 				B84DA98921136FCF0020D949 /* Assets.xcassets */,
 				B838285D213053D700A45F36 /* Custom Cells */,
@@ -269,6 +280,7 @@
 				B871A3BD21470B1F000A3C81 /* GigType.swift in Sources */,
 				B80FDD1E212227FD00E187DD /* Section.swift in Sources */,
 				B86C84F4214ABCA400963416 /* UtilityExtensions.swift in Sources */,
+				B8071D7D2152DC9A00E096FC /* PopAnimator.swift in Sources */,
 				B89391762124B77600B34567 /* YearCalendarCollectionLayout.swift in Sources */,
 				B81C8CE22121F7C4006B9C71 /* Year.swift in Sources */,
 				B84DA98321136FCE0020D949 /* AppDelegate.swift in Sources */,

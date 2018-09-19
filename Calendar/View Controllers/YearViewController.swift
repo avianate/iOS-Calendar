@@ -30,6 +30,8 @@ class YearViewController: UIViewController {
     var finishedInitialLayout = false
     var yearToDisplay = 1
     
+    let transition = PopAnimator()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,6 +46,8 @@ class YearViewController: UIViewController {
         calendars.append(Calendar(date: date1!))
         calendars.append(Calendar(date: date2!))
         calendars.append(Calendar(date: date3!))
+        
+        self.navigationController?.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -153,24 +157,40 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // TODO: Transition to MonthViewController
-        performSegue(withIdentifier: "SelectMonthSegue", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        performSegue(withIdentifier: "SelectMonthSegue", sender: self)
+        
+        // don't forget the add the identifier to the view controller in interface builder
+        let monthViewController = storyboard!.instantiateViewController(withIdentifier: "MonthViewController") as! MonthViewController
+        monthViewController.transitioningDelegate = self
+        
         let indexPath = calendarView.indexPathsForSelectedItems?.first
         self.yearToDisplay = indexPath?.section ?? 1
         
-        if segue.identifier == "SelectMonthSegue" {
-            let destinationVC = segue.destination as! MonthViewController
-            if let indexPath = indexPath {
-                destinationVC.calendars = calendars
-                destinationVC.selectedYear = indexPath.section
-                destinationVC.selectedMonth = indexPath.item
-                destinationVC.delegate = self
-                
-            }
+        if let indexPath = indexPath {
+            monthViewController.calendars = calendars
+            monthViewController.selectedYear = indexPath.section
+            monthViewController.selectedMonth = indexPath.item
+            monthViewController.delegate = self
         }
+        
+        navigationController?.pushViewController(monthViewController, animated: true)
     }
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        let indexPath = calendarView.indexPathsForSelectedItems?.first
+//        self.yearToDisplay = indexPath?.section ?? 1
+//
+//        if segue.identifier == "SelectMonthSegue" {
+//            let destinationVC = segue.destination as! MonthViewController
+//            if let indexPath = indexPath {
+//                destinationVC.calendars = calendars
+//                destinationVC.selectedYear = indexPath.section
+//                destinationVC.selectedMonth = indexPath.item
+//                destinationVC.delegate = self
+//
+//            }
+//        }
+//    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentTitle = navigationItem.title
@@ -233,5 +253,52 @@ extension YearViewController: MonthViewDelegate {
     
     func yearToDisplay(_ year: Int) {
         yearToDisplay = year
+    }
+}
+
+//extension YearViewController: UIViewControllerTransitioningDelegate {
+//    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        // conver the transition context's coordinate space to the selected image coordinate space
+//        // to: nil will convert the selected image to the coordinate space of the window
+//
+//        // transition.originFrame = selectedImage!.superview!.convert(selectedImage!.frame, to nil)
+//        // selectedImage?.isHidden = true
+//        transition.presenting = true
+//        return transition
+//    }
+//
+//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        transition.presenting = false
+//        return transition
+//    }
+//}
+
+// MARK: - UIViewControllerTransitioningDelegate
+
+extension YearViewController: UINavigationControllerDelegate, UIViewControllerTransitioningDelegate {
+    
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+
+        // only perform custom animation if fromVC.title or toVC.title is 'Details'
+//        let useCustom = operation == .push && toVC.title == "Details" || operation == .pop && fromVC.title == "Details"
+
+//        if !useCustom {
+//            return nil
+//        }
+
+        if operation == .push {
+
+            guard let selected = calendarView.indexPathsForSelectedItems?.first else { return nil }
+            let cell = calendarView.cellForItem(at: selected) as! MonthCollectionViewCell
+
+            transition.originFrame = cell.superview!.convert(cell.frame, to: nil)
+            transition.presenting = true
+            transition.selectedIndexPath = selected
+
+            return transition
+        }
+
+        transition.presenting = false
+        return transition
     }
 }
