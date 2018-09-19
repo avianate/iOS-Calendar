@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.12.1" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Gig" representedClassName="Gig" syncable="YES" codeGenerationType="class">
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="closingSong" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Song" inverseName="closingSong" inverseEntity="Song" syncable="YES"/>
         <relationship name="encoreSong" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Song" inverseName="encoreSong" inverseEntity="Song" syncable="YES"/>
         <relationship name="openingSong" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Song" inverseName="openingSong" inverseEntity="Song" syncable="YES"/>
@@ -9,20 +9,20 @@
     </entity>
     <entity name="Song" representedClassName="Song" syncable="YES" codeGenerationType="class">
         <attribute name="composer" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="datesPlayed" optional="YES" attributeType="Transformable" customClassName="[NSDate]" syncable="YES"/>
+        <attribute name="datesPlayed" optional="YES" attributeType="Transformable" customClassName="[String]" syncable="YES"/>
         <attribute name="genre" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="closingSong" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Gig" inverseName="closingSong" inverseEntity="Gig" syncable="YES"/>
-        <relationship name="encoreSong" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Gig" inverseName="encoreSong" inverseEntity="Gig" syncable="YES"/>
-        <relationship name="openingSong" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Gig" inverseName="openingSong" inverseEntity="Gig" syncable="YES"/>
+        <relationship name="closingSong" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Gig" inverseName="closingSong" inverseEntity="Gig" syncable="YES"/>
+        <relationship name="encoreSong" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Gig" inverseName="encoreSong" inverseEntity="Gig" syncable="YES"/>
+        <relationship name="openingSong" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Gig" inverseName="openingSong" inverseEntity="Gig" syncable="YES"/>
     </entity>
     <entity name="Venue" representedClassName="Venue" syncable="YES" codeGenerationType="class">
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="datesPlayed" optional="YES" attributeType="Transformable" customClassName="[NSDate]" syncable="YES"/>
+        <attribute name="datesPlayed" optional="YES" attributeType="Transformable" customClassName="[String]" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stateProvince" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="gig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Gig" inverseName="venue" inverseEntity="Gig" syncable="YES"/>
+        <relationship name="gig" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Gig" inverseName="venue" inverseEntity="Gig" syncable="YES"/>
     </entity>
     <elements>
         <element name="Gig" positionX="319.37109375" positionY="44.63671875" width="128" height="120"/>

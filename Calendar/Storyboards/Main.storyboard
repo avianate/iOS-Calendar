@@ -134,27 +134,36 @@
                                                     <color key="backgroundColor" red="1" green="0.0" blue="0.01666666667" alpha="1" colorSpace="calibratedRGB"/>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="31" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a59-Tb-CmU">
-                                                    <rect key="frame" x="11" y="8" width="18" height="24"/>
+                                                    <rect key="frame" x="11" y="4" width="18" height="25"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gig_full_white" translatesAutoresizingMaskIntoConstraints="NO" id="nFv-oN-ugc">
+                                                    <rect key="frame" x="17.5" y="29" width="5" height="5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="5" id="73q-z2-D9z"/>
+                                                        <constraint firstAttribute="width" constant="5" id="kzH-LV-7gN"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="a59-Tb-CmU" firstAttribute="top" secondItem="zu4-Ti-92i" secondAttribute="topMargin" id="8Tr-aD-gci"/>
-                                            <constraint firstItem="a59-Tb-CmU" firstAttribute="centerY" secondItem="zu4-Ti-92i" secondAttribute="centerY" id="BoA-aW-O0S"/>
+                                            <constraint firstItem="a59-Tb-CmU" firstAttribute="top" secondItem="zu4-Ti-92i" secondAttribute="top" constant="4" id="3AJ-q3-OhA"/>
                                             <constraint firstAttribute="trailing" secondItem="bKG-Pu-aLF" secondAttribute="trailing" id="N4o-yQ-WF0"/>
                                             <constraint firstItem="bKG-Pu-aLF" firstAttribute="leading" secondItem="zu4-Ti-92i" secondAttribute="leading" id="PZs-bd-5g3"/>
+                                            <constraint firstItem="nFv-oN-ugc" firstAttribute="bottom" secondItem="zu4-Ti-92i" secondAttribute="bottom" constant="-6" id="QNk-Ib-Zxt"/>
+                                            <constraint firstItem="nFv-oN-ugc" firstAttribute="centerX" secondItem="zu4-Ti-92i" secondAttribute="centerX" id="S3Q-Bn-tV4"/>
+                                            <constraint firstItem="nFv-oN-ugc" firstAttribute="top" secondItem="a59-Tb-CmU" secondAttribute="bottom" id="ZVj-XR-RfP"/>
                                             <constraint firstItem="bKG-Pu-aLF" firstAttribute="top" secondItem="zu4-Ti-92i" secondAttribute="top" id="htr-KO-rhe"/>
                                             <constraint firstItem="a59-Tb-CmU" firstAttribute="centerX" secondItem="zu4-Ti-92i" secondAttribute="centerX" id="kZD-uv-xN0"/>
                                             <constraint firstAttribute="bottom" secondItem="bKG-Pu-aLF" secondAttribute="bottom" id="m2A-qQ-jlh"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="a59-Tb-CmU" secondAttribute="bottom" id="pah-WQ-PoC"/>
                                         </constraints>
                                         <size key="customSize" width="40" height="40"/>
                                         <connections>
                                             <outlet property="activeView" destination="bKG-Pu-aLF" id="DEZ-ap-RU6"/>
                                             <outlet property="dateLabel" destination="a59-Tb-CmU" id="nea-FA-Fno"/>
+                                            <outlet property="gigAccessory" destination="nFv-oN-ugc" id="c3Y-6e-zma"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -479,4 +488,7 @@
             <point key="canvasLocation" x="965.60000000000002" y="133.5832083958021"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="gig_full_white" width="10" height="10"/>
+    </resources>
 </document>

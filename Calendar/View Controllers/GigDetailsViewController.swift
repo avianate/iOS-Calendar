@@ -9,6 +9,10 @@
 import UIKit
 import CoreData
 
+protocol GigDelegate: class {
+    func createOrUpdateGig(type: GigType, data: AnyObject)
+}
+
 class GigDetailsViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
@@ -16,6 +20,8 @@ class GigDetailsViewController: UIViewController {
     var gigType: GigType?
     var venues = [Venue]()
     var songs = [Song]()
+    var selectedDate: Date?
+    var delegate: GigDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,13 +115,15 @@ extension GigDetailsViewController: UITableViewDataSource {
 extension GigDetailsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: update item in database for gigType
+
+        guard let gigType = gigType else { return }
         
         // get item from songs or venues
         let item = gigType == GigType.Venue ? venues[indexPath.row] : songs[indexPath.row]
         
         // update gigType with item for selected date
+        delegate?.createOrUpdateGig(type: gigType, data: item)
         
-        
+        navigationController?.popViewController(animated: true)
     }
 }

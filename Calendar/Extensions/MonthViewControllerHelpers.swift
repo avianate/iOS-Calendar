@@ -162,6 +162,9 @@ extension MonthViewController {
                 
                 // set it's text color back to black
                 previousCell.dateLabel.textColor = isRed ? UIColor.red : UIColor.black
+                let dateComponents = DateComponents(year: month.year, month: month.month, day: day)
+                let date = month.getDateFrom(components: dateComponents)
+                setGigAccessory(forCell: previousCell, ofDate: date!)
             }
         }
         
@@ -187,6 +190,42 @@ extension MonthViewController {
                 cell.activeView.backgroundColor = UIColor.red
             }
         }
+    }
+    
+    func setGigAccessory(forCell cell: DateCollectionViewCell, ofDate date: Date) {
+        let isSelected = cell.isSelected
+        let color = isSelected ? "white" : "black"
+        let modifier = isPartialGig(date) ? "partial" : "full"
+        let hasGigOnDate = hasGig(onDate: date)
+        
+        if hasGigOnDate {
+            cell.gigAccessory.image = UIImage(named: "gig_\(modifier)_\(color)_5x5")
+        }
+        
+        cell.gigAccessory.isHidden = !hasGigOnDate
+    }
+    
+    func hasGig(onDate date: Date) -> Bool {
+        
+        let month = Month(date: date)
+        let gig = month.getData(forDate: date)
+        
+        return gig != nil
+    }
+    
+    func isPartialGig(_ date: Date) -> Bool {
+        let month = Month(date: date)
+
+        if let gig = month.getData(forDate: date) {
+            let hasVenue = gig.venue != nil
+            let hasOpener = gig.openingSong != nil
+            let hasCloser = gig.closingSong != nil
+            let hasEncore = gig.encoreSong != nil
+            
+            return !hasVenue || !hasOpener || !hasCloser || !hasEncore
+        }
+        
+        return false
     }
     
     /// Determines if the cell being rendered is a sunday
@@ -247,9 +286,9 @@ extension MonthViewController {
         let date = month.getDateFrom(components: dateComponents)
         
         if let date = date {
-            meetingForDate = month.getData(forDate: date)
+            gigForDate = month.getData(forDate: date)
         } else {
-            meetingForDate = nil
+            gigForDate = nil
         }
         
         tableView.reloadData()

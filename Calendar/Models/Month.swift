@@ -18,6 +18,9 @@ class Month {
     var isCurrentMonth = false
     var isCurrentYear = false
     var isCurrentDay = false
+    var month: Int = 0
+    var day: Int = 0
+    var year: Int = 0
     
     private let currentCalendar = UIKit.Calendar.autoupdatingCurrent
     private var today = Date()
@@ -33,8 +36,36 @@ class Month {
         todayComponents = currentCalendar.dateComponents([.year, .month, .day], from: today)
         self.isCurrentYear = year == todayComponents.year
         
-        let monthComponents = currentCalendar.dateComponents([.year, .month], from: date)
+        let monthComponents = currentCalendar.dateComponents([.year, .month, .day], from: date)
         isCurrentMonth = todayComponents.month == monthComponents.month && isCurrentYear
+        
+        if let month = monthComponents.month, let day = monthComponents.day, let year = monthComponents.year {
+            self.month = month
+            self.day = day
+            self.year = year
+        }
+    }
+    
+    
+    // TODO: refactor the initializers to not duplicate the same code
+    init(date: Date) {
+        self.firstWeekday = getFirstDayOfMonth(forDate: date)
+        self.lastWeekday = getLastWeekdayOfMonth(forDate: date)
+        self.numberOfDays = getNumberOfDaysInMonth(forDate: date)
+        self.name = getMonthName(forDate: date)
+        
+        todayComponents = currentCalendar.dateComponents([.year, .month, .day], from: today)
+        let dateYear = currentCalendar.dateComponents([.year], from: date)
+        self.isCurrentYear = dateYear.year == todayComponents?.year
+        
+        let monthComponents = currentCalendar.dateComponents([.year, .month, .day], from: date)
+        isCurrentMonth = todayComponents.month == monthComponents.month && isCurrentYear
+        
+        if let month = monthComponents.month, let day = monthComponents.day, let year = monthComponents.year {
+            self.month = month
+            self.day = day
+            self.year = year
+        }
     }
     
     func isCurrentDate(dayIndex day: Int) -> Bool {
@@ -97,8 +128,8 @@ class Month {
         // 2 create fetch request for all "Gig" entities
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Gig")
         //        let foo = NSPredicate(format: "stationId CONTAINS[c] %@ OR stationId CONTAINS[c] %@", date as CVarArg, date)
-        let nsDate = date as NSDate
-        let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", nsDate, nsDate)
+        let dateString = date.toString()
+        let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", dateString, dateString)
         
         fetchRequest.predicate = predicate
         

@@ -29,4 +29,17 @@ enum GigType: Int {
             return "Encore Song"
         }
     }
+    
+    var key: String {
+        switch self {
+        case .Venue:
+            return "venue"
+        case .OpeningSong:
+            return "openingSong"
+        case .ClosingSong:
+            return "closingSong"
+        case .EncoreSong:
+            return "encoreSong"
+        }
+    }
 }

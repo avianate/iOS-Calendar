@@ -18,7 +18,7 @@ protocol MonthViewDelegate: class {
 
 // MARK: - VIEW CONTROLLER
 
-class MonthViewController: UIViewController {
+class MonthViewController: UIViewController, GigDelegate {
     
     // MARK: - OUTLETS
     
@@ -34,7 +34,7 @@ class MonthViewController: UIViewController {
     var selectedMonth: Int?
     var selectedDate: Date?
     var previouslySelectedCellIndex: IndexPath?
-    var meetingForDate: Gig?
+    var gigForDate: Gig?
     
     var cellWidth: CGFloat = 40
     var marginWidth: CGFloat = 30
@@ -75,6 +75,18 @@ class MonthViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        guard let indexPath = calendarView.indexPathsForSelectedItems?.first else { return }
+        
+        let cell = calendarView.cellForItem(at: indexPath) as! DateCollectionViewCell
+        let day = getDay(fromCell: cell)
+        loadMeetingDataForDate(fromSection: indexPath.section, andDay: day)
+        
+        updateCalendarViewCell()
+        
+        tableView.reloadData()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         // get the year view to go back to
         let year = getVisibleYear()
@@ -95,6 +107,139 @@ class MonthViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    func createOrUpdateGig(type: GigType, data: AnyObject) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        let context = appDelegate.persistentContainer.viewContext
+        //        context.reset()
+        
+        // check if gig already exists
+        if let indexPath = calendarView.indexPathsForSelectedItems?.first, let date = selectedDate {
+            let month = months[indexPath.section]
+            let dateString = date.toString()
+            
+            if let existingGig = month.getData(forDate: date) {
+                existingGig.setValue(data, forKey: type.key)
+                
+                if type == GigType.Venue {
+                    existingGig.setValue(dateString, forKey: "date")
+                } else {
+                    update(datePlayed: date, forGigType: type, andGig: existingGig, withContext: context)
+                }
+                
+                do {
+                    try context.save()
+                } catch {
+                    let error = error as NSError
+                    print("Couldn't update gig: \(error) \(error.userInfo)")
+                }
+                
+                return
+            }
+        }
+        
+        // create new gig
+        let gigEntity = NSEntityDescription.entity(forEntityName: "Gig", in: context)!
+        let newGig = NSManagedObject(entity: gigEntity, insertInto: context) as! Gig
+        
+        // add data to gigType property of gig
+        data.setValue([selectedDate?.toString()], forKey: "datesPlayed")
+        newGig.setValue(data, forKey: type.key)
+        
+        // set selectedDate to gigType datePlayed property
+        newGig.setValue(selectedDate!.toString(), forKey: "date")
+        // save the context
+        
+        do {
+            try context.save()
+            
+        } catch {
+            let error = error as NSError
+            print("Couldn't save gig: \(error) \(error.userInfo)")
+        }
+    }
+    
+    private func update(datePlayed date: Date, forGigType type: GigType, andGig gig: Gig, withContext context: NSManagedObjectContext) {
+        
+        var song: Song?
+        
+        switch type {
+        case .ClosingSong:
+            song = gig.closingSong
+        case .EncoreSong:
+            song = gig.encoreSong
+        case .OpeningSong:
+            song = gig.openingSong
+        case .Venue:
+            break
+        }
+        
+        if var datesPlayed = song?.datesPlayed {
+            
+            datesPlayed.append(date.toString())
+            
+            let temp = Set(datesPlayed)
+            datesPlayed = Array(temp)
+            
+            song?.setValue(datesPlayed, forKey: "datesPlayed")
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            let error = error as NSError
+            print("Couldn't update gig: \(error) \(error.userInfo)")
+        }
+    }
+    
+    private func remove(type: GigType, fromGig gig: Gig) {
+        guard let dateString = selectedDate?.toString() else { return }
+
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        
+        var datesPlayed = [String]()
+        var newDatesPlayed = [String]()
+        let isVenue = type == GigType.Venue
+        
+        if isVenue {
+            if let venue = gig.venue, let played = venue.datesPlayed {
+                datesPlayed = played
+                newDatesPlayed = datesPlayed.filter {$0 != dateString}
+                venue.setValue(newDatesPlayed, forKey: "datesPlayed")
+                gig.setValue(nil, forKey: "venue")
+            }
+        } else if !isVenue, let song = gig.value(forKey: type.key) as? Song, let played = song.datesPlayed  {
+            datesPlayed = played
+            newDatesPlayed = datesPlayed.filter {$0 != dateString }
+            song.setValue(newDatesPlayed, forKey: "datesPlayed")
+            gig.setValue(nil, forKey: type.key)
+        }
+        
+        if gigIsEmpty(gig) {
+            context.delete(gig)
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            let error = error as NSError
+            print("Can't remove datePlayed: \(error) \(error.userInfo)")
+        }
+    }
+    
+    private func gigIsEmpty(_ gig: Gig) -> Bool {
+        return gig.venue == nil && gig.openingSong == nil && gig.closingSong == nil && gig.encoreSong == nil
+    }
+    
+    private func updateCalendarViewCell() {
+        guard let indexPath = calendarView.indexPathsForSelectedItems?.first else { return }
+        guard let cell = calendarView.cellForItem(at: indexPath) as? DateCollectionViewCell else { return }
+        guard let date = selectedDate else { return }
+        
+        setGigAccessory(forCell: cell, ofDate: date)
     }
 }
 
@@ -143,10 +288,18 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
         let section = indexPath.section
         
         let month = months[section]
+        let year = getYear(forSection: section)
         let offset = getOffsetDays(forMonth: month)
+        let day = item - offset
         
         cell.dateLabel.text = getCellDayNumber(forMonth: month, withIndexPath: indexPath)
         setTextColorAndSelection(forCell: cell, withMonth: month, day: item, offset: offset, andIndex: indexPath)
+        
+        let dateComponents = DateComponents(year: year, month: month.month, day: day)
+
+        if day > 0, let date = month.getDateFrom(components: dateComponents) {
+            setGigAccessory(forCell: cell, ofDate: date)
+        }
         
         return cell
     }
@@ -163,8 +316,18 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
         let month = months[indexPath.section]
         let dayNumber = getDay(fromCell: selectedCell)
         
+        let calendarMonth = getMonthInYear(fromSection: indexPath.section)
+        let year = getYear(forSection: indexPath.section)
+        let dateComponents = DateComponents(year: year, month: calendarMonth, day: dayNumber)
+        selectedDate = month.getDateFrom(components: dateComponents)
+        
         // set the cell accessory to show it as selected
         setTextColorAndSelection(forCell: selectedCell, withMonth: month, day: dayNumber, andIndex: indexPath, isSelected: true)
+        
+        if let date = month.getDateFrom(components: dateComponents) {
+            setGigAccessory(forCell: selectedCell, ofDate: date)
+        }
+        
         previouslySelectedCellIndex = indexPath
         
         // fetches meeting data for selected day and updates the tableView
@@ -180,13 +343,58 @@ extension MonthViewController: UITableViewDelegate {
         if segue.identifier == "DetailSegue" {
             let destinationVC = segue.destination as! GigDetailsViewController
             
-            print(tableView.indexPathForSelectedRow)
-            
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let type = GigType(rawValue: indexPath.section)
                 destinationVC.gigType = type
+                destinationVC.delegate = self
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        tableView.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let cell = tableView.cellForRow(at: indexPath)
+        
+        let deleteHandler: UIContextualAction.Handler = { [weak self] action, view, callback in
+            
+            
+            // if cell is empty, return
+            if cell?.textLabel?.text == "", cell == nil {
+                return
+            }
+            
+            // get gigType
+            if let gig = self?.gigForDate, let gigType = GigType(rawValue: indexPath.section) {
+                
+                self?.remove(type: gigType, fromGig: gig)
+                UIView.animate(withDuration: 0.5, animations: {
+                    cell?.alpha = 0
+                    cell?.textLabel?.text = ""
+                }, completion: nil)
+                // remove item from gig
+                // remove date for gigType item
+                // deleteRow in table view or just remove text in cell
+            }
+
+//            self?.contacts.remove(at: indexPath.row)
+//
+            
+            
+            self?.updateCalendarViewCell()
+            
+            callback(true)
+        }
+        
+        let deleteAction = UIContextualAction(style: .normal, title: "Delete", handler: deleteHandler)
+        deleteAction.backgroundColor = UIColor.red
+        let actions = [deleteAction]
+        let config = UISwipeActionsConfiguration(actions: actions)
+        
+        return config
     }
 }
 
@@ -203,7 +411,7 @@ extension MonthViewController: UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -220,7 +428,7 @@ extension MonthViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
         let section = indexPath.section
         // get the selected date
-        if let meeting = meetingForDate {
+        if let meeting = gigForDate {
             // get Gigs for selected date
             let numberAndTitle = getSongTitle(forSection: section, forMeeting: meeting)
             cell?.textLabel?.text = numberAndTitle

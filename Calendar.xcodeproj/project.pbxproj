@@ -18,6 +18,7 @@
 		B84DA98321136FCE0020D949 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84DA98221136FCE0020D949 /* AppDelegate.swift */; };
 		B84DA98A21136FCF0020D949 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B84DA98921136FCF0020D949 /* Assets.xcassets */; };
 		B84DA99521137CC20020D949 /* DateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84DA99421137CC20020D949 /* DateCollectionViewCell.swift */; };
+		B86C84F4214ABCA400963416 /* UtilityExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86C84F3214ABCA400963416 /* UtilityExtensions.swift */; };
 		B871A3B52147097D000A3C81 /* MonthViewControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B871A3B42147097D000A3C81 /* MonthViewControllerHelpers.swift */; };
 		B871A3B721470A35000A3C81 /* Seeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B871A3B621470A35000A3C81 /* Seeder.swift */; };
 		B871A3BD21470B1F000A3C81 /* GigType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B871A3BC21470B1F000A3C81 /* GigType.swift */; };
@@ -45,6 +46,7 @@
 		B84DA98921136FCF0020D949 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B84DA98E21136FCF0020D949 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B84DA99421137CC20020D949 /* DateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCollectionViewCell.swift; sourceTree = "<group>"; };
+		B86C84F3214ABCA400963416 /* UtilityExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityExtensions.swift; sourceTree = "<group>"; };
 		B871A3B42147097D000A3C81 /* MonthViewControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthViewControllerHelpers.swift; sourceTree = "<group>"; };
 		B871A3B621470A35000A3C81 /* Seeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seeder.swift; sourceTree = "<group>"; };
 		B871A3BC21470B1F000A3C81 /* GigType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GigType.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 		B814062A213F7EBB003F08E8 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B86C84F3214ABCA400963416 /* UtilityExtensions.swift */,
 				B814062B213F7EC8003F08E8 /* NSPersistentContainer.swift */,
 				B871A3B42147097D000A3C81 /* MonthViewControllerHelpers.swift */,
 			);
@@ -265,6 +268,7 @@
 				B835A89C212632D1009C6981 /* Calendar.swift in Sources */,
 				B871A3BD21470B1F000A3C81 /* GigType.swift in Sources */,
 				B80FDD1E212227FD00E187DD /* Section.swift in Sources */,
+				B86C84F4214ABCA400963416 /* UtilityExtensions.swift in Sources */,
 				B89391762124B77600B34567 /* YearCalendarCollectionLayout.swift in Sources */,
 				B81C8CE22121F7C4006B9C71 /* Year.swift in Sources */,
 				B84DA98321136FCE0020D949 /* AppDelegate.swift in Sources */,
