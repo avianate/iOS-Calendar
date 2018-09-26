@@ -29,8 +29,9 @@ class YearViewController: UIViewController {
     var calendars = [Calendar]()
     var finishedInitialLayout = false
     var yearToDisplay = 1
+    var selectedMonth: MonthCollectionViewCell?
     
-    let transition = PopAnimator()
+    let transition = YearToMonthTransition()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,6 +172,8 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
             monthViewController.selectedYear = indexPath.section
             monthViewController.selectedMonth = indexPath.item
             monthViewController.delegate = self
+
+            selectedMonth = calendarView.cellForItem(at: indexPath) as? MonthCollectionViewCell
         }
         
         navigationController?.pushViewController(monthViewController, animated: true)
@@ -286,19 +289,19 @@ extension YearViewController: UINavigationControllerDelegate, UIViewControllerTr
 //            return nil
 //        }
 
-        if operation == .push {
-
-            guard let selected = calendarView.indexPathsForSelectedItems?.first else { return nil }
-            let cell = calendarView.cellForItem(at: selected) as! MonthCollectionViewCell
-
-            transition.originFrame = cell.superview!.convert(cell.frame, to: nil)
-            transition.presenting = true
-            transition.selectedIndexPath = selected
-
-            return transition
-        }
-
-        transition.presenting = false
+//        if operation == .push {
+//
+//            guard let selected = calendarView.indexPathsForSelectedItems?.first else { return nil }
+//            let cell = calendarView.cellForItem(at: selected) as! MonthCollectionViewCell
+//
+//            transition.originFrame = cell.superview!.convert(cell.frame, to: nil)
+//            transition.presenting = true
+//            transition.selectedIndexPath = selected
+//
+//            return transition
+//        }
+//
+//        transition.presenting = false
         return transition
     }
 }
