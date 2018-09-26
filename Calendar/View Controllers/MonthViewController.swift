@@ -24,6 +24,7 @@ class MonthViewController: UIViewController, GigDelegate {
     
     @IBOutlet weak var calendarView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var calendarHeightConstraint: NSLayoutConstraint!
     
     // MARK: - PROPERTIES
     
@@ -47,6 +48,8 @@ class MonthViewController: UIViewController, GigDelegate {
     // MARK: - VIEW LIFECYCEL METHODS
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        calendarHeightConstraint.constant = view.frame.height / 2
         
         if let selectedMonth = selectedMonth, let selectedYear = selectedYear, months.count > 0 {
             let monthIndex = (selectedYear * 12) + selectedMonth

@@ -78,6 +78,11 @@ class YearViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+        if transition.presenting {
+            return
+        }
+        
         super.viewWillTransition(to: size, with: coordinator)
         
         // invalidate the year collection view inside the coordinator animate function
@@ -302,6 +307,7 @@ extension YearViewController: UINavigationControllerDelegate, UIViewControllerTr
 //        }
 //
 //        transition.presenting = false
+        transition.presenting = true
         return transition
     }
 }
