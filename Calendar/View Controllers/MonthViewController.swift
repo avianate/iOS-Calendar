@@ -13,7 +13,8 @@ import CoreData
 
 protocol MonthViewDelegate: class {
     func backButtonDidChange(title: String)
-    func yearToDisplay(_ year: Int)
+//    optional func yearToDisplay(_ year: Int)
+    func update(year: Int, month: Int)
 }
 
 // MARK: - VIEW CONTROLLER
@@ -24,6 +25,7 @@ class MonthViewController: UIViewController, GigDelegate {
     
     @IBOutlet weak var calendarView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var calendarHeightConstraint: NSLayoutConstraint!
     
     // MARK: - PROPERTIES
     
@@ -47,6 +49,8 @@ class MonthViewController: UIViewController, GigDelegate {
     // MARK: - VIEW LIFECYCEL METHODS
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        calendarHeightConstraint.constant = view.frame.height / 2
         
         if let selectedMonth = selectedMonth, let selectedYear = selectedYear, months.count > 0 {
             let monthIndex = (selectedYear * 12) + selectedMonth
@@ -90,7 +94,9 @@ class MonthViewController: UIViewController, GigDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         // get the year view to go back to
         let year = getVisibleYear()
-        delegate?.yearToDisplay(year)
+        let month = getVisibleMonth()
+//        delegate?.yearToDisplay(year)
+        delegate?.update(year: year, month: month)
     }
     
     override func viewDidLayoutSubviews() {

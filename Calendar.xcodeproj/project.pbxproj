@@ -28,6 +28,8 @@
 		B871A3CE214716FB000A3C81 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B871A3CC214716FB000A3C81 /* Main.storyboard */; };
 		B89391762124B77600B34567 /* YearCalendarCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89391752124B77600B34567 /* YearCalendarCollectionLayout.swift */; };
 		B89391782124D4E300B34567 /* MonthCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89391772124D4E300B34567 /* MonthCollectionViewCell.swift */; };
+		B8A5E2E0215BDD3500E87C38 /* NavigationTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A5E2DE215BDD3500E87C38 /* NavigationTransitionCoordinator.swift */; };
+		B8A5E2E1215BDD3500E87C38 /* YearToMonthTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A5E2DF215BDD3500E87C38 /* YearToMonthTransition.swift */; };
 		B8B6C44B21480AD500B14FA9 /* GigDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B6C44A21480AD500B14FA9 /* GigDetailsViewController.swift */; };
 		B8C192502125D23100A7838F /* MonthCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C1924F2125D23100A7838F /* MonthCollectionViewFlowLayout.swift */; };
 		B8FB1E70212284BE0019FA37 /* YearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8FB1E6F212284BE0019FA37 /* YearViewController.swift */; };
@@ -57,6 +59,8 @@
 		B871A3CC214716FB000A3C81 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		B89391752124B77600B34567 /* YearCalendarCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearCalendarCollectionLayout.swift; sourceTree = "<group>"; };
 		B89391772124D4E300B34567 /* MonthCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthCollectionViewCell.swift; sourceTree = "<group>"; };
+		B8A5E2DE215BDD3500E87C38 /* NavigationTransitionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTransitionCoordinator.swift; sourceTree = "<group>"; };
+		B8A5E2DF215BDD3500E87C38 /* YearToMonthTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YearToMonthTransition.swift; sourceTree = "<group>"; };
 		B8B6C44A21480AD500B14FA9 /* GigDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GigDetailsViewController.swift; sourceTree = "<group>"; };
 		B8C1924F2125D23100A7838F /* MonthCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		B8FB1E6F212284BE0019FA37 /* YearViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearViewController.swift; sourceTree = "<group>"; };
@@ -77,6 +81,8 @@
 		B8071D7B2152DC8000E096FC /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
+				B8A5E2DE215BDD3500E87C38 /* NavigationTransitionCoordinator.swift */,
+				B8A5E2DF215BDD3500E87C38 /* YearToMonthTransition.swift */,
 				B8071D7C2152DC9A00E096FC /* PopAnimator.swift */,
 			);
 			path = Transitions;
@@ -274,6 +280,7 @@
 				B80FDD1C212227AA00E187DD /* SectionHeader.swift in Sources */,
 				B84DA99521137CC20020D949 /* DateCollectionViewCell.swift in Sources */,
 				B8FB1E70212284BE0019FA37 /* YearViewController.swift in Sources */,
+				B8A5E2E0215BDD3500E87C38 /* NavigationTransitionCoordinator.swift in Sources */,
 				B81C8CE421220D4A006B9C71 /* Month.swift in Sources */,
 				B8B6C44B21480AD500B14FA9 /* GigDetailsViewController.swift in Sources */,
 				B835A89C212632D1009C6981 /* Calendar.swift in Sources */,
@@ -284,6 +291,7 @@
 				B89391762124B77600B34567 /* YearCalendarCollectionLayout.swift in Sources */,
 				B81C8CE22121F7C4006B9C71 /* Year.swift in Sources */,
 				B84DA98321136FCE0020D949 /* AppDelegate.swift in Sources */,
+				B8A5E2E1215BDD3500E87C38 /* YearToMonthTransition.swift in Sources */,
 				B871A3B721470A35000A3C81 /* Seeder.swift in Sources */,
 				B871A3C021470E66000A3C81 /* Calendar.xcdatamodeld in Sources */,
 			);

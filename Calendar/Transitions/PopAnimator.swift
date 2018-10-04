@@ -30,11 +30,12 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let initialFrame = presenting ? originFrame : monthView.frame
         let finalFrame = presenting ? monthView.frame : originFrame
         
-        let xScaleFactor = presenting ? initialFrame.width / finalFrame.width : finalFrame.width / initialFrame.width
-        let yScaleFactor = presenting ? initialFrame.height / finalFrame.height : finalFrame.height / initialFrame.height
-        let scaleFactor = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
+        let initialXScale = presenting ? initialFrame.width / finalFrame.width : finalFrame.width / initialFrame.width
+        let initialYScale = presenting ? initialFrame.height / finalFrame.height : finalFrame.height / initialFrame.height
+        let scaleFactor = CGAffineTransform(scaleX: initialXScale, y: initialYScale)
         
         if presenting {
+            // initial scale
             monthView.transform = scaleFactor
             monthView.center = CGPoint(x: initialFrame.midX, y: initialFrame.midY)
         }
@@ -50,7 +51,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         // 2. Animate
         UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.0, animations: {
-            monthView.transform = self.presenting ? .identity : scaleFactor
+            monthView.transform = self.presenting ? .identity : scaleFactor // final scale
             monthView.center = CGPoint(x: finalFrame.midX, y: finalFrame.midY)
             monthController.calendarView.alpha = self.presenting ? 1.0 : 0.0
         }, completion: { success in

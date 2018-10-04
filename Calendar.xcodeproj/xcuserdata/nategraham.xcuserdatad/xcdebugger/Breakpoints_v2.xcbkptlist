@@ -9,30 +9,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Calendar/MonthCollectionViewFlowLayout.swift"
-            timestampString = "556815155.433817"
+            filePath = "Calendar/Transitions/YearToMonthTransition.swift"
+            timestampString = "560382799.541918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "collectionView(_:layout:sizeForItemAt:)"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "getOffsetBetween(originFrame:andFinalFrame:withXScale:andYScale:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Calendar/MonthCollectionViewCell.swift"
-            timestampString = "556814820.9174941"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
-            landmarkName = "MonthCollectionViewCell"
-            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

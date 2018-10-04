@@ -29,8 +29,12 @@ class YearViewController: UIViewController {
     var calendars = [Calendar]()
     var finishedInitialLayout = false
     var yearToDisplay = 1
+    var monthToDisplay = 1
+    var selectedMonth: MonthCollectionViewCell?
+    var monthCellPositions: [CGRect]?
+    var selectedMonthFrame: CGRect?
     
-    let transition = PopAnimator()
+    let transition = YearToMonthTransition()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +59,25 @@ class YearViewController: UIViewController {
         
         scrollToYear()
         
-        let visibleYear = getVisibleYear()
+//        let visibleCellFrames = calendarView.visibleCells as! [MonthCollectionViewCell]
+//        let visibleIndexPaths = calendarView.indexPathsForVisibleItems.sorted { (first, second) -> Bool in
+//            return first.section <= second.section && first.item <= second.item
+//        }
+//
+//        var frames = [CGRect]()
+//
+//        for indexPath in visibleIndexPaths {
+//            let cell = calendarView.cellForItem(at: indexPath) as! MonthCollectionViewCell
+//            let convertedFrame = calendarView.superview!.convert(calendarView.convert(cell.frame, to: nil), to: nil)
+//
+//            frames.append(convertedFrame)
+//        }
+//
+//        monthCellPositions = frames
+//        monthCellPositions = visibleCellFrames.map { calendarView.superview!.convert(calendarView.convert($0.frame, to: nil), to: nil) }
+        
+//        let visibleYear = getVisibleYear()
+        let visibleYear = "\(calendars[yearToDisplay].year)"
         navigationItem.title = visibleYear != "" ? visibleYear : String(calendars[1].year)
     }
     
@@ -73,7 +95,22 @@ class YearViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
+        let visibleIndexPaths = calendarView.indexPathsForVisibleItems.sorted { (first, second) -> Bool in
+            return first.section <= second.section && first.item <= second.item
+        }
+        
+        var frames = [CGRect]()
+        
+        for indexPath in visibleIndexPaths {
+            let cell = calendarView.cellForItem(at: indexPath) as! MonthCollectionViewCell
+            let convertedFrame = calendarView.convert(cell.frame, to: nil)
+            
+            frames.append(convertedFrame)
+        }
+        
+        monthCellPositions = frames
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -107,7 +144,7 @@ class YearViewController: UIViewController {
         return ""
     }
     
-    private func scrollToYear() {
+    func scrollToYear() {
         let section: CGFloat = CGFloat(yearToDisplay)
         let headerHeight: CGFloat = 35
         let headerHeightOffset: CGFloat = headerHeight * (section + 1)
@@ -171,6 +208,9 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
             monthViewController.selectedYear = indexPath.section
             monthViewController.selectedMonth = indexPath.item
             monthViewController.delegate = self
+
+            selectedMonth = calendarView.cellForItem(at: indexPath) as? MonthCollectionViewCell
+            selectedMonthFrame = calendarView.convert(selectedMonth!.frame, to: nil)
         }
         
         navigationController?.pushViewController(monthViewController, animated: true)
@@ -254,6 +294,11 @@ extension YearViewController: MonthViewDelegate {
     func yearToDisplay(_ year: Int) {
         yearToDisplay = year
     }
+    
+    func update(year: Int, month: Int) {
+        yearToDisplay = year
+        monthToDisplay = month
+    }
 }
 
 //extension YearViewController: UIViewControllerTransitioningDelegate {
@@ -280,25 +325,30 @@ extension YearViewController: UINavigationControllerDelegate, UIViewControllerTr
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 
         // only perform custom animation if fromVC.title or toVC.title is 'Details'
-//        let useCustom = operation == .push && toVC.title == "Details" || operation == .pop && fromVC.title == "Details"
+        let useCustom = fromVC.title != "Event Details" && toVC.title != "Event Details"
 
-//        if !useCustom {
-//            return nil
-//        }
+        if !useCustom {
+            return nil
+        }
 
-        if operation == .push {
+        if operation == .pop {
 
-            guard let selected = calendarView.indexPathsForSelectedItems?.first else { return nil }
-            let cell = calendarView.cellForItem(at: selected) as! MonthCollectionViewCell
+//            guard let selected = calendarView.indexPathsForSelectedItems?.first else { return nil }
+            
+            let indexPath = IndexPath(item: monthToDisplay, section: yearToDisplay)
+            if let monthCell = calendarView.cellForItem(at: indexPath) as? MonthCollectionViewCell {
+                transition.selectedMonthFrame = calendarView.convert(monthCell.frame, to: nil)
+            }
 
-            transition.originFrame = cell.superview!.convert(cell.frame, to: nil)
-            transition.presenting = true
-            transition.selectedIndexPath = selected
+//            transition.originFrame = cell.superview!.convert(cell.frame, to: nil)
+            transition.monthViewIsPresenting = false
+//            transition.selectedIndexPath = selected
 
             return transition
         }
-
-        transition.presenting = false
+//
+//        transition.presenting = false
+        transition.monthViewIsPresenting = true
         return transition
     }
 }
