@@ -91,7 +91,6 @@ extension MonthViewController {
         let indexPath = calendarView.indexPathsForVisibleItems.first
         let month = indexPath?.section
         if let month = month {
-            print("\nupdated month: \(month), mod: \(month % 12)")
             return month % 12
         }
         

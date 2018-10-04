@@ -325,11 +325,11 @@ extension YearViewController: UINavigationControllerDelegate, UIViewControllerTr
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 
         // only perform custom animation if fromVC.title or toVC.title is 'Details'
-//        let useCustom = operation == .push && toVC.title == "Details" || operation == .pop && fromVC.title == "Details"
+        let useCustom = fromVC.title != "Event Details" && toVC.title != "Event Details"
 
-//        if !useCustom {
-//            return nil
-//        }
+        if !useCustom {
+            return nil
+        }
 
         if operation == .pop {
 

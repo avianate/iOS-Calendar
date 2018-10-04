@@ -43,68 +43,64 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     func transitionToYear(monthViewController monthVC: MonthViewController, yearViewController yearVC: YearViewController, containerView: UIView, transitionContext: UIViewControllerContextTransitioning) {
+        
         containerView.addSubview(yearVC.view)
         containerView.bringSubviewToFront(monthVC.view)
+        containerView.backgroundColor = UIColor.white
         
         // get the start and end frame sizes
         let originFrame = monthVC.view.frame
         let finalFrame = yearVC.monthCellPositions![yearVC.monthToDisplay]
+        let originalCenter = yearVC.view.center
         
         let monthXScale = finalFrame.width / originFrame.width
         let monthYScale = finalFrame.height / originFrame.height
         
+        let yearXScale = originFrame.width / finalFrame.width
+        let yearYScale = (originFrame.height / 2) / finalFrame.height
+        
+        let newPoint = getOffsetBetween(originFrame: originFrame, andFinalFrame: finalFrame, withXScale: yearXScale, andYScale: yearYScale)
+        
         yearVC.view.transform = .identity
         yearVC.calendarView.transform = .identity
         yearVC.view.alpha = 0.0
+        yearVC.view.transform = CGAffineTransform(scaleX: yearXScale, y: yearYScale)
+        yearVC.view.center = newPoint
         
         // shrink view controller scale
         UIView.animate(withDuration: 0.5, animations: {
             // scale monthVC down
             monthVC.view.transform = CGAffineTransform(scaleX: monthXScale, y: monthYScale)
             // move to new point
-            monthVC.view.center = CGPoint(x: finalFrame.midX, y: finalFrame.midY)
+            monthVC.view.center = CGPoint(x: finalFrame.midX, y: finalFrame.midY + 50)
             monthVC.view.alpha = 0.0
+            monthVC.view.backgroundColor = UIColor.white
+            monthVC.calendarView.backgroundColor = UIColor.white
+            monthVC.tableView.transform = CGAffineTransform(translationX: 0.0, y: containerView.frame.height * 4)
+            
             yearVC.view.alpha = 1.0
+            yearVC.view.transform = .identity
+            yearVC.view.center = originalCenter
         }, completion: { success in
             transitionContext.completeTransition(true)
         })
-
-        // translate table view off screen
-        // transition background color to white
-        // transition to alpha 0.0
-        
-        // create yearVC snapshot
-        // zoom snapshot
-        // translate snapshot
-        // transition alpha to 1.0
-        
     }
     
     func transitionToMonth(monthViewController monthVC: MonthViewController, yearViewController yearVC: YearViewController, containerView: UIView, transitionContext: UIViewControllerContextTransitioning) {
-        
-        guard let snapshot = yearVC.view.snapshotView(afterScreenUpdates: false) else { return }
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         if let window = appDelegate.window, let selectedMonthCell = yearVC.selectedMonth {
             
-            // create a throwaway frame so we don't see a black background during animation
-            let frame = CGRect(x: 0.0, y: 0.0, width: window.frame.width, height: window.frame.height)
-            let backgroundView = UIView(frame: frame)
-            backgroundView.backgroundColor = .white
-            containerView.addSubview(backgroundView)
-            
-            // add a snapshot which will be used for the animation
-            containerView.addSubview(snapshot)
-//            yearVC.removeFromParent()
-            yearVC.view.alpha = 0.0
+            // set the container view's background color to white just to be safe
+            containerView.backgroundColor = .white
             
             // get the starting and ending frame sizes for the transition
             let originFrame = selectedMonthCell.superview?.convert(selectedMonthCell.frame, to: nil)
             let finalFrame = monthVC.calendarView.frame
             
             // get scale factor
-            let xScaleFactor = window.frame.width / originFrame!.width
+            let xScaleFactor = finalFrame.width / originFrame!.width
             let yScaleFactor =  finalFrame.height / originFrame!.height
             
             // set the initial scale for the month view controller
@@ -131,9 +127,9 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
             // animate to desired state
             UIView.animate(withDuration: 0.5, animations: {
                 // set scale and origin to zoom into month cell
-                snapshot.transform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
-                snapshot.center = newPoint
-                snapshot.alpha = 0.0
+                yearVC.view.transform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
+                yearVC.view.center = newPoint
+                yearVC.view.alpha = 0.0
                 
                 // fade in monthViewController
                 monthVC.view.alpha = 1.0
@@ -151,9 +147,8 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
                     monthVC.view.backgroundColor = self.originalBackgroundColor
                     monthVC.calendarView.backgroundColor = self.originalBackgroundColor
                 }, completion: { success in
-                    // remove the snapshot and background view we created for this transition
-                    snapshot.removeFromSuperview()
-                    backgroundView.removeFromSuperview()
+                    // reset the yearVC transform or it will be messed up when comming back from the month
+                    yearVC.view.transform = .identity
                     
                     transitionContext.completeTransition(true)
                 })
@@ -161,6 +156,7 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
         }
     }
     
+    // gets the offset between the originFrame, the window, and the finalFrame accounting for the x and y scale values
     func getOffsetBetween(originFrame origin: CGRect, window: CGRect, andFinalFrame finalFrame: CGRect, withXScaleX scaleX: CGFloat, andScaleY scaleY: CGFloat) -> CGPoint {
         // get the new offset whilst accounting for the new x and y scale values
         let offsetX = (origin.midX - window.midX) * scaleX
@@ -168,9 +164,19 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
         
         // get new window center based on offset amount
         let newX = window.midX - offsetX
-        let newY = window.midY - offsetY - (finalFrame.midY + 50)
+        let newY = window.midY - offsetY - (finalFrame.midY + 50) // adjust for day label height
         
         let newPoint = CGPoint(x: newX, y: newY)
+        
+        return newPoint
+    }
+    
+    // gets the offset from the current monthVC center and the yearVC month cell's center while accounting for the x and y yearVC scale values
+    func getOffsetBetween(originFrame origin: CGRect, andFinalFrame final: CGRect, withXScale scaleX: CGFloat, andYScale scaleY: CGFloat) -> CGPoint {
+        let offsetX = (origin.midX - final.midX + 50) * scaleX
+        let offsetY = (origin.midY - final.midY + 50) * scaleY
+        
+        let newPoint = CGPoint(x: offsetX, y: offsetY)
         
         return newPoint
     }

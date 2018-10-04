@@ -258,10 +258,10 @@
             </objects>
             <point key="canvasLocation" x="2741.5999999999999" y="133.5832083958021"/>
         </scene>
-        <!--Gig Details View Controller-->
+        <!--Event Details-->
         <scene sceneID="B5e-CQ-JtS">
             <objects>
-                <viewController id="jh0-BQ-cIg" customClass="GigDetailsViewController" customModule="Calendar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Event Details" id="jh0-BQ-cIg" customClass="GigDetailsViewController" customModule="Calendar" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oEN-AN-sH9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
