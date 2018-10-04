@@ -13,7 +13,8 @@ import CoreData
 
 protocol MonthViewDelegate: class {
     func backButtonDidChange(title: String)
-    func yearToDisplay(_ year: Int)
+//    optional func yearToDisplay(_ year: Int)
+    func update(year: Int, month: Int)
 }
 
 // MARK: - VIEW CONTROLLER
@@ -93,7 +94,9 @@ class MonthViewController: UIViewController, GigDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         // get the year view to go back to
         let year = getVisibleYear()
-        delegate?.yearToDisplay(year)
+        let month = getVisibleMonth()
+//        delegate?.yearToDisplay(year)
+        delegate?.update(year: year, month: month)
     }
     
     override func viewDidLayoutSubviews() {

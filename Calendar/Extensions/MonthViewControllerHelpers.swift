@@ -42,7 +42,6 @@ extension MonthViewController {
             let buttonTitle = "\(month.name) \(calendars[selectedYear].year)"
             delegate?.backButtonDidChange(title: buttonTitle)
             
-            
             return
         }
         
@@ -86,6 +85,17 @@ extension MonthViewController {
         }
         
         return 1
+    }
+    
+    func getVisibleMonth() -> Int {
+        let indexPath = calendarView.indexPathsForVisibleItems.first
+        let month = indexPath?.section
+        if let month = month {
+            print("\nupdated month: \(month), mod: \(month % 12)")
+            return month % 12
+        }
+        
+        return 0
     }
     
     // determines the number of days to offset for the first day of the month
