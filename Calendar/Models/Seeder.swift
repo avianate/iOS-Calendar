@@ -69,6 +69,11 @@ class Seeder {
         gig.setValue(venue1, forKey: "venue")
         gig.setValue(today.toString(), forKey: "date")
         
+        let gigs = NSSet()
+        gigs.adding(gig)
+        
+        venue1.setValue(gigs, forKey: "gig")
+        
         do {
             try context.save()
             
