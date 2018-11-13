@@ -127,7 +127,6 @@ class Month {
         
         // 2 create fetch request for all "Gig" entities
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Gig")
-        //        let foo = NSPredicate(format: "stationId CONTAINS[c] %@ OR stationId CONTAINS[c] %@", date as CVarArg, date)
         let dateString = date.toString()
         let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", dateString, dateString)
         
