@@ -15,7 +15,7 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
     var selectedMonthFrame: CGRect!
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 1.0
+        return 0.3
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -68,7 +68,7 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
         yearVC.view.center = newPoint
         
         // shrink view controller scale
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
             // scale monthVC down
             monthVC.view.transform = CGAffineTransform(scaleX: monthXScale, y: monthYScale)
             // move to new point
@@ -81,9 +81,9 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
             yearVC.view.alpha = 1.0
             yearVC.view.transform = .identity
             yearVC.view.center = originalCenter
-        }, completion: { success in
+        }) { (success) in
             transitionContext.completeTransition(true)
-        })
+        }
     }
     
     func transitionToMonth(monthViewController monthVC: MonthViewController, yearViewController yearVC: YearViewController, containerView: UIView, transitionContext: UIViewControllerContextTransitioning) {
@@ -125,7 +125,7 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
             containerView.bringSubviewToFront(monthVC.view)
             
             // animate to desired state
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
                 // set scale and origin to zoom into month cell
                 yearVC.view.transform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
                 yearVC.view.center = newPoint
@@ -153,6 +153,35 @@ class YearToMonthTransition: NSObject, UIViewControllerAnimatedTransitioning {
                     transitionContext.completeTransition(true)
                 })
             })
+            
+//            UIView.animate(withDuration: 0.5, animations: {
+//                // set scale and origin to zoom into month cell
+//                yearVC.view.transform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
+//                yearVC.view.center = newPoint
+//                yearVC.view.alpha = 0.0
+//
+//                // fade in monthViewController
+//                monthVC.view.alpha = 1.0
+//                // change backgroundColor back to original
+//                monthVC.tableView.transform = .identity
+//                monthVC.calendarHeightConstraint.constant = 240
+//                // zoom in and center
+//                monthVC.view.transform = .identity
+//                monthVC.view.center = CGPoint(x: window.frame.midX, y: window.frame.midY)
+//
+//            }, completion: { success in
+//                // clean up
+//                UIView.animate(withDuration: 0.5, animations: {
+//                    // transition back to original background color
+//                    monthVC.view.backgroundColor = self.originalBackgroundColor
+//                    monthVC.calendarView.backgroundColor = self.originalBackgroundColor
+//                }, completion: { success in
+//                    // reset the yearVC transform or it will be messed up when comming back from the month
+//                    yearVC.view.transform = .identity
+//
+//                    transitionContext.completeTransition(true)
+//                })
+//            })
         }
     }
     

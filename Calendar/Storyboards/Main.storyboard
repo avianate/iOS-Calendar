@@ -212,9 +212,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="jh0-BQ-cIg" kind="show" identifier="DetailSegue" id="ZRG-a0-SkS"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -252,6 +249,7 @@
                         <outlet property="calendarHeightConstraint" destination="rhm-Uq-1yh" id="2F9-wT-hRx"/>
                         <outlet property="calendarView" destination="MTV-z3-B8a" id="Zfl-SG-na7"/>
                         <outlet property="tableView" destination="2k7-TR-L79" id="x1f-mU-pB1"/>
+                        <segue destination="jh0-BQ-cIg" kind="show" identifier="DetailSegue" id="cFp-PG-sy1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

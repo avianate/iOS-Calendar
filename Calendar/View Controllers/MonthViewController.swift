@@ -40,7 +40,7 @@ class MonthViewController: UIViewController, GigDelegate {
     
     var cellWidth: CGFloat = 40
     var marginWidth: CGFloat = 30
-    var finishedInitialLayout = false;
+    var finishedInitialLayout = false
     // tableViewData: dataType
     
     // MARK: - DELEGATES
@@ -49,8 +49,6 @@ class MonthViewController: UIViewController, GigDelegate {
     // MARK: - VIEW LIFECYCEL METHODS
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        calendarHeightConstraint.constant = view.frame.height / 2
         
         if let selectedMonth = selectedMonth, let selectedYear = selectedYear, months.count > 0 {
             let monthIndex = (selectedYear * 12) + selectedMonth
@@ -146,17 +144,20 @@ class MonthViewController: UIViewController, GigDelegate {
             }
         }
         
-        // create new gig
-        let gigEntity = NSEntityDescription.entity(forEntityName: "Gig", in: context)!
-        let newGig = NSManagedObject(entity: gigEntity, insertInto: context) as! Gig
-        
-        // add data to gigType property of gig
-        data.setValue([selectedDate?.toString()], forKey: "datesPlayed")
-        newGig.setValue(data, forKey: type.key)
-        
-        // set selectedDate to gigType datePlayed property
-        newGig.setValue(selectedDate!.toString(), forKey: "date")
-        // save the context
+        if let selectedDate = selectedDate {
+            
+            // create new gig
+            let gigEntity = NSEntityDescription.entity(forEntityName: "Gig", in: context)!
+            let newGig = NSManagedObject(entity: gigEntity, insertInto: context) as! Gig
+            
+            // add data to gigType property of gig
+            data.setValue([selectedDate.toString()], forKey: "datesPlayed")
+            newGig.setValue(data, forKey: type.key)
+            
+            // set selectedDate to gigType datePlayed property
+            newGig.setValue(selectedDate.toString(), forKey: "date")
+            // save the context
+        }
         
         do {
             try context.save()
@@ -200,7 +201,7 @@ class MonthViewController: UIViewController, GigDelegate {
         }
     }
     
-    private func remove(type: GigType, fromGig gig: Gig) {
+    private func remove(type: GigType, fromGig gig: Gig, completion: (_ result: Bool) -> Void) {
         guard let dateString = selectedDate?.toString() else { return }
 
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -215,6 +216,7 @@ class MonthViewController: UIViewController, GigDelegate {
                 datesPlayed = played
                 newDatesPlayed = datesPlayed.filter {$0 != dateString}
                 venue.setValue(newDatesPlayed, forKey: "datesPlayed")
+                venue.setValue(nil, forKey: "gig")
                 gig.setValue(nil, forKey: "venue")
             }
         } else if !isVenue, let song = gig.value(forKey: type.key) as? Song, let played = song.datesPlayed  {
@@ -230,9 +232,11 @@ class MonthViewController: UIViewController, GigDelegate {
         
         do {
             try context.save()
+            completion(true)
         } catch {
             let error = error as NSError
             print("Can't remove datePlayed: \(error) \(error.userInfo)")
+            completion(false)
         }
     }
     
@@ -345,6 +349,15 @@ extension MonthViewController: UICollectionViewDataSource, UICollectionViewDeleg
 
 extension MonthViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if selectedDate == nil {
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
+        }
+        
+        performSegue(withIdentifier: "DetailSegue", sender: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "DetailSegue" {
             let destinationVC = segue.destination as! GigDetailsViewController
@@ -363,33 +376,40 @@ extension MonthViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
+        // *Note: There's a known bug where deleting multiple rows quickly back-to-back will throw an error
+        // This bug still exists as of iOS 12. See this link for more information: https://forums.developer.apple.com/thread/88190
+        
         let cell = tableView.cellForRow(at: indexPath)
         
         let deleteHandler: UIContextualAction.Handler = { [weak self] action, view, callback in
-            
-            
             // if cell is empty, return
-            if cell?.textLabel?.text == "", cell == nil {
-                return
+            if cell?.textLabel?.text == "" || cell == nil {
+                return callback(false)
             }
             
             // get gigType
             if let gig = self?.gigForDate, let gigType = GigType(rawValue: indexPath.section) {
+                tableView.beginUpdates()
                 
-                self?.remove(type: gigType, fromGig: gig)
-                UIView.animate(withDuration: 0.5, animations: {
-                    cell?.alpha = 0
-                    cell?.textLabel?.text = ""
-                }, completion: nil)
-                // remove item from gig
-                // remove date for gigType item
-                // deleteRow in table view or just remove text in cell
+                self?.remove(type: gigType, fromGig: gig, completion: { success in
+
+                    if success {
+                        UIView.animate(withDuration: 0.5, animations: {
+                            cell?.alpha = 0
+                            cell?.textLabel?.text = ""
+                            
+                        }, completion: { success in
+                            
+                            if self?.gigHasPropertiesToRemove() ?? false {
+                                self?.gigForDate?.setValue(nil, forKey: gigType.key)
+                            }
+                        })
+                    }
+                })
+                
+                tableView.endUpdates()
             }
 
-//            self?.contacts.remove(at: indexPath.row)
-//
-            
-            
             self?.updateCalendarViewCell()
             
             callback(true)
@@ -401,6 +421,12 @@ extension MonthViewController: UITableViewDelegate {
         let config = UISwipeActionsConfiguration(actions: actions)
         
         return config
+    }
+    
+    private func gigHasPropertiesToRemove() -> Bool {
+        guard let gig = self.gigForDate else { return false }
+        
+        return gig.closingSong != nil || gig.encoreSong != nil || gig.openingSong != nil || gig.venue != nil
     }
 }
 
